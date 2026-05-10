@@ -116,7 +116,7 @@ export default function ExploreScreen({ onNavigate, initialParams }: ExploreScre
   const hasActiveFilters = search || formatFilter || statusFilter;
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-8 animate-in fade-in duration-500">
+    <div className="flex-1 overflow-y-auto flex flex-col gap-6 p-4 md:p-8 animate-in fade-in duration-500">
       {/* Header */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2 text-emerald-600 font-bold uppercase tracking-widest text-xs mb-1">
