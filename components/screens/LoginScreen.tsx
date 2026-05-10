@@ -10,6 +10,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
+  rememberMe: z.boolean().optional(),
 });
 
 const signupSchema = z.object({
@@ -95,6 +96,23 @@ export function LoginScreen({ onLogin, onForgotPassword }: LoginScreenProps) {
         onLogin();
       } else {
         setApiError(result.error || 'Failed to register');
+      }
+    } catch (err) {
+      setApiError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGuestLogin = async () => {
+    setIsLoading(true);
+    setApiError('');
+    try {
+      const res = await fetch('/api/auth/guest', { method: 'POST' });
+      if (res.ok) {
+        onLogin();
+      } else {
+        setApiError('Failed to continue as guest');
       }
     } catch (err) {
       setApiError('An unexpected error occurred');
@@ -209,6 +227,14 @@ export function LoginScreen({ onLogin, onForgotPassword }: LoginScreenProps) {
               </div>
 
               <div className="flex items-center justify-between mt-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    {...loginForm.register('rememberMe')}
+                    className="w-4 h-4 rounded border-gray-300 text-[#0f3d26] focus:ring-[#0f3d26] bg-[#faf4e8]"
+                  />
+                  <span className="text-xs" style={{ color: '#1a4a30' }}>Remember me</span>
+                </label>
                 <a href="#" onClick={(e) => { e.preventDefault(); onForgotPassword(); }} className="text-xs hover:underline" style={{ color: '#1a4a30' }}>Forgot Password?</a>
               </div>
 
@@ -284,6 +310,21 @@ export function LoginScreen({ onLogin, onForgotPassword }: LoginScreenProps) {
               {isLogin ? "Create an account" : "Sign In"}
             </a>
           </p>
+
+          <div className="mt-6 flex flex-col items-center gap-4">
+            <div className="flex items-center w-full">
+              <div className="flex-1 border-t border-gray-300 dark:border-neutral-700"></div>
+              <span className="px-3 text-xs text-gray-500 uppercase tracking-widest">Or</span>
+              <div className="flex-1 border-t border-gray-300 dark:border-neutral-700"></div>
+            </div>
+            <button 
+              onClick={(e) => { e.preventDefault(); handleGuestLogin(); }}
+              disabled={isLoading}
+              className="w-full font-medium py-2.5 rounded-lg border-2 border-[#1a4a30] text-[#1a4a30] hover:bg-[#1a4a30] hover:text-[#f0e6d0] transition-colors"
+            >
+              Continue as Guest
+            </button>
+          </div>
         </div>
       </div>
     </div>

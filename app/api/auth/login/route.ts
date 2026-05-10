@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
   try {
     await dbConnect();
-    const { email, password } = await req.json();
+    const { email, password, rememberMe } = await req.json();
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       email: user.email,
       role: user.role,
       name: user.name,
-    });
+    }, rememberMe);
 
     return NextResponse.json({ message: 'Logged in successfully', user: { email: user.email, role: user.role, name: user.name } });
   } catch (error: any) {

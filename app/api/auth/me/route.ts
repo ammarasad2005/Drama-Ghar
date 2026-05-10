@@ -17,7 +17,8 @@ export async function GET() {
       userId: session.userId,
       email: session.email,
       role: session.role,
-      name: session.name
+      name: session.name,
+      isGuest: session.isGuest || false
     }
   });
 }

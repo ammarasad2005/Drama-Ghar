@@ -18,6 +18,7 @@ import DramaDetailScreen from '@/components/screens/DramaDetailScreen';
 import { ForgotPasswordScreen } from '@/components/screens/ForgotPasswordScreen';
 import { ResetPasswordScreen } from '@/components/screens/ResetPasswordScreen';
 import { AboutScreen } from '@/components/screens/AboutScreen';
+import { Facebook, Instagram, Twitter } from 'lucide-react';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
@@ -193,16 +194,25 @@ export default function App() {
         <div className="flex-1 overflow-hidden flex flex-col">
           {renderScreen()}
           
-          <footer className="shrink-0 border-t border-gray-100 dark:border-neutral-900 bg-white dark:bg-[#0a0a0a] px-4 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between text-[10px] text-gray-400 gap-4 sm:gap-0">
-            <div className="flex items-center gap-4">
-              <span>© 2026 DramaGhar</span>
-              <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">About</button>
-              <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">Privacy</button>
-              <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">Contact</button>
+          <footer className="shrink-0 border-t border-gray-100 dark:border-neutral-900 bg-white dark:bg-[#0a0a0a] px-4 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-gray-400 gap-4 sm:gap-0">
+            <div className="flex flex-col sm:flex-row items-center gap-4 text-[10px]">
+              <span>© 2026 DramaGhar. All rights reserved.</span>
+              <div className="flex gap-4">
+                <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">About</button>
+                <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">Privacy</button>
+                <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">Contact</button>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <span>Data sourced from</span>
-              <a href="https://pakdrama.pk" target="_blank" rel="noreferrer" className="text-emerald-700 font-bold hover:underline">pakdrama.pk</a>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="flex items-center gap-3">
+                <a href="#" className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-emerald-600 transition-colors"><Facebook size={14} /></a>
+                <a href="#" className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-emerald-600 transition-colors"><Twitter size={14} /></a>
+                <a href="#" className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-emerald-600 transition-colors"><Instagram size={14} /></a>
+              </div>
+              <div className="flex items-center gap-1 text-[10px]">
+                <span>Data sourced from</span>
+                <a href="https://pakdrama.pk" target="_blank" rel="noreferrer" className="text-emerald-700 font-bold hover:underline">pakdrama.pk</a>
+              </div>
             </div>
           </footer>
         </div>

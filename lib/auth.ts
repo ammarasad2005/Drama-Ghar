@@ -12,11 +12,11 @@ export interface SessionPayload {
   [key: string]: any;
 }
 
-export async function encrypt(payload: SessionPayload) {
+export async function encrypt(payload: SessionPayload, expiresIn = "24h") {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("24h") // Session expires after 24 hours of inactivity
+    .setExpirationTime(expiresIn)
     .sign(key);
 }
 
@@ -31,18 +31,23 @@ export async function decrypt(input: string): Promise<SessionPayload | null> {
   }
 }
 
-export async function createSession(payload: SessionPayload) {
-  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-  const session = await encrypt(payload);
+export async function createSession(payload: SessionPayload, rememberMe: boolean = false) {
+  const expiresIn = rememberMe ? "30d" : "24h";
+  const session = await encrypt(payload, expiresIn);
 
   const cookieStore = await cookies();
-  cookieStore.set("session", session, {
-    expires,
+  const cookieOptions: any = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-  });
+  };
+
+  if (rememberMe) {
+    cookieOptions.expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+  }
+
+  cookieStore.set("session", session, cookieOptions);
 }
 
 export async function getSession() {
