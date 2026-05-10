@@ -13,7 +13,7 @@ export function RemindersScreen() {
     <div className="flex-1 overflow-y-auto px-8 py-6">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-1">My Reminders</h1>
-        <p className="text-gray-500 text-sm">Don't miss an episode.</p>
+        <p className="text-gray-500 text-sm">Don&apos;t miss an episode.</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">

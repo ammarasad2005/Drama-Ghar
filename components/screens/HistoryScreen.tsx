@@ -15,7 +15,7 @@ export function HistoryScreen() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1">Watch History</h1>
-          <p className="text-gray-500 text-sm">What you've watched recently.</p>
+          <p className="text-gray-500 text-sm">What you&apos;ve watched recently.</p>
         </div>
         
         <div className="relative">

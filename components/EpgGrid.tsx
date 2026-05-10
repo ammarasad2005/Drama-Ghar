@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import Image from 'next/image';
 
 interface Program {
@@ -8,6 +8,7 @@ interface Program {
   end_time_pkt: string;
   schedule_time: string;
   status: string;
+  airingType?: string;
 }
 
 interface ChannelData {
@@ -16,7 +17,16 @@ interface ChannelData {
   programs: Program[];
 }
 
-export function EpgGrid({ date, selectedChannel }: { date: string, selectedChannel: string }) {
+export interface EpgGridHandle {
+  scrollToTime: (minutes: number) => void;
+}
+
+interface EpgGridProps {
+  date: string;
+  selectedChannel: string;
+}
+
+export const EpgGrid = forwardRef<EpgGridHandle, EpgGridProps>(({ date, selectedChannel }, ref) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [scrollX, setScrollX] = useState(0);
   const [scheduleData, setScheduleData] = useState<ChannelData[]>([]);
@@ -81,8 +91,58 @@ export function EpgGrid({ date, selectedChannel }: { date: string, selectedChann
        scroller.scrollLeft = Math.max(0, currentPx - 200); // 200px offset left
     }
 
-    return () => scroller.removeEventListener('scroll', handleScroll);
+    let isDown = false;
+    let startX: number;
+    let scrollLeft: number;
+
+    const onMouseDown = (e: MouseEvent) => {
+      isDown = true;
+      scroller.classList.add('cursor-grabbing');
+      startX = e.pageX - scroller.offsetLeft;
+      scrollLeft = scroller.scrollLeft;
+    };
+
+    const onMouseLeave = () => {
+      isDown = false;
+      scroller.classList.remove('cursor-grabbing');
+    };
+
+    const onMouseUp = () => {
+      isDown = false;
+      scroller.classList.remove('cursor-grabbing');
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - scroller.offsetLeft;
+      const walk = (x - startX) * 2; // Scroll-fast
+      scroller.scrollLeft = scrollLeft - walk;
+    };
+
+    scroller.addEventListener('mousedown', onMouseDown);
+    scroller.addEventListener('mouseleave', onMouseLeave);
+    scroller.addEventListener('mouseup', onMouseUp);
+    scroller.addEventListener('mousemove', onMouseMove);
+
+    return () => {
+      scroller.removeEventListener('scroll', handleScroll);
+      scroller.removeEventListener('mousedown', onMouseDown);
+      scroller.removeEventListener('mouseleave', onMouseLeave);
+      scroller.removeEventListener('mouseup', onMouseUp);
+      scroller.removeEventListener('mousemove', onMouseMove);
+    };
   }, [nowMinutes]);
+
+  useImperativeHandle(ref, () => ({
+    scrollToTime: (minutes: number) => {
+      if (scrollerRef.current) {
+        // 120px = 60 mins -> 2px per minute. Subtract 100px for offset
+        const targetPx = Math.max(0, (minutes * 2) - 100);
+        scrollerRef.current.scrollTo({ left: targetPx, behavior: 'smooth' });
+      }
+    }
+  }));
 
   const channelInfoList: Record<string, string> = {
     'ARY Digital': 'https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/channels/ary-digital-1771190693112-49b1cf79.svg',
@@ -224,4 +284,6 @@ export function EpgGrid({ date, selectedChannel }: { date: string, selectedChann
       </div>
     </div>
   );
-}
+});
+
+EpgGrid.displayName = 'EpgGrid';

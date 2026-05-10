@@ -56,7 +56,7 @@ export function HomeScreen() {
           {/* Today's Picks */}
           <div className="lg:col-span-1 border border-gray-100 bg-white/50 backdrop-blur-sm rounded-2xl p-5 shadow-sm relative z-10">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-900">Today's Picks</h2>
+              <h2 className="text-lg font-bold text-gray-900">Today&apos;s Picks</h2>
               <button className="text-emerald-700 text-xs font-medium hover:underline">View all</button>
             </div>
             
@@ -87,7 +87,7 @@ export function HomeScreen() {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 relative overflow-hidden">
              
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-gray-900">Today's Schedule</h2>
+            <h2 className="text-lg font-bold text-gray-900">Today&apos;s Schedule</h2>
             <button className="text-emerald-700 text-xs font-medium hover:underline">View Full Schedule</button>
           </div>
           
