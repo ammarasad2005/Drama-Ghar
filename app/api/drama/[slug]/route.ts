@@ -22,7 +22,8 @@ export async function GET(
     const dramaParams = new URLSearchParams();
     dramaParams.set("select", "id,title,slug,poster_path,status,format,release_year,views,episode_count,description,director,channel_id,channel_name,schedule_days,schedule_time,genre,genre_list");
     dramaParams.set("slug", `eq.${slug}`);
-    dramaParams.set("is_active", "eq.true");
+    // Note: We do NOT filter by is_active so that clicking from the EPG schedule
+    // always works — many active dramas (like Pehli Barish) have is_active=false
     dramaParams.set("limit", "1");
 
     const dramaRes = await fetch(`${SUPABASE_URL}/rest/v1/programs?${dramaParams.toString()}`, {

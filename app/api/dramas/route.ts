@@ -18,7 +18,9 @@ export async function GET(request: NextRequest) {
   try {
     const params = new URLSearchParams();
     params.set("select", "id,title,slug,poster_path,status,format,release_year,views,episode_count,channel_name,schedule_days,schedule_time");
-    params.set("is_active", "eq.true");
+    // Note: We intentionally do NOT filter by is_active because many dramas
+    // with episodes (like Pehli Barish) have is_active=false in Supabase
+    // but are still valid and visible on the original pakdrama.pk site
     params.set("order", "views.desc");
     params.set("offset", offset.toString());
     params.set("limit", limit.toString());
