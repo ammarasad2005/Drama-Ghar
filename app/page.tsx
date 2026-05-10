@@ -32,8 +32,8 @@ export default function App() {
   const [dramaSlug, setDramaSlug] = useState<string | null>(null);
   const [exploreParams, setExploreParams] = useState<any>(null);
 
-  const navigateToSchedule = (channel: string) => {
-    setSelectedChannel(channel);
+  const navigateToSchedule = (channel?: string) => {
+    setSelectedChannel(channel || 'All Channels');
     setCurrentScreen('schedule');
   };
 

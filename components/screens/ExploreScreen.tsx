@@ -120,7 +120,7 @@ export default function ExploreScreen({ onNavigate, initialParams }: ExploreScre
           Discover
         </div>
         <h1 className="text-3xl md:text-5xl font-black text-[#2a1f0e] tracking-tight">
-          Explore Dramas
+          Library
         </h1>
         <p className="text-sm md:text-base text-[#6b5530] font-medium max-w-2xl leading-snug">
           Discover the vast catalog of Pakistani dramas, watch every episode, and stay updated with your favorite shows.

@@ -12,7 +12,6 @@ export function ScheduleScreen({ onNavigate, initialChannel = 'All Channels' }: 
   const [selectedChannel, setSelectedChannel] = useState(initialChannel);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedChannel(initialChannel);
   }, [initialChannel]);
 

@@ -96,6 +96,8 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchUpNext();
     // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchRecommendations();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCurrentSchedule();
   }, []);
 

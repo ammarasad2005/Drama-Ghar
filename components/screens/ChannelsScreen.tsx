@@ -5,7 +5,7 @@ import { EpgChannel } from '@/lib/epg-types';
 import { formatDateKey } from '@/lib/date-utils';
 
 interface ChannelsScreenProps {
-  onNavigate: (tab: string) => void;
+  onNavigate: (screen: string, params?: Record<string, string>) => void;
   onChannelClick: (channel: string) => void;
 }
 
@@ -26,16 +26,9 @@ export function ChannelsScreen({ onNavigate, onChannelClick }: ChannelsScreenPro
       
       if (Array.isArray(data)) {
         const mapped = data.filter(c => c.name !== 'LTN Family').map((c, i) => {
-          const colors = ['blue', 'yellow', 'orange', 'green', 'red'];
-          const topShow = c.programs && c.programs.length > 0 
-            ? c.programs.find(p => p.isPrime)?.title || c.programs[0].title
-            : 'No upcoming shows';
-            
           return {
             name: c.name,
-            color: colors[i % colors.length],
-            desc: `Top-rated dramas from ${c.name}`,
-            topShow: topShow
+            logo_path: c.logo_path,
           };
         });
         setChannels(mapped);
@@ -62,38 +55,36 @@ export function ChannelsScreen({ onNavigate, onChannelClick }: ChannelsScreenPro
         <p className="text-gray-500 text-sm">Watch your favorite channels live.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {channels.map((channel, i) => (
           <div 
             key={i} 
-            onClick={() => onChannelClick(channel.name)}
-            className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col gap-4 group cursor-pointer"
+            className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl overflow-hidden shadow-sm p-6 flex flex-col gap-6 group hover:shadow-lg transition-all"
           >
             <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center shrink-0 ${
-                channel.color === 'blue' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-500' :
-                channel.color === 'yellow' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-500' :
-                channel.color === 'orange' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-500' :
-                channel.color === 'green' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-500' :
-                'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-500'
-              }`}>
-                <MonitorPlay className="w-5 h-5 lg:w-6 lg:h-6" />
+              <div className="w-16 h-16 rounded-xl border border-gray-100 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-800 flex items-center justify-center overflow-hidden">
+                <img 
+                    src={`https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${channel.logo_path}`} 
+                    alt={channel.name} 
+                    className="w-full h-full object-contain p-1"
+                />
               </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-base lg:text-lg text-gray-900 dark:text-white">{channel.name}</h3>
-                <p className="text-xs lg:text-sm text-gray-500 line-clamp-1">{channel.desc}</p>
-              </div>
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white">{channel.name}</h3>
             </div>
             
-            <div className="bg-gray-50 dark:bg-neutral-800/50 rounded-xl p-3 flex items-center justify-between border border-gray-100 dark:border-neutral-800 mt-auto">
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-[#D4AF37]" />
-                  <span className="text-[10px] lg:text-xs text-gray-500">Must Watch</span>
-                </div>
-                <span className="text-sm font-semibold text-gray-900 dark:text-gray-200 mt-0.5 group-hover:text-emerald-700 dark:group-hover:text-emerald-500 transition-colors line-clamp-1">{channel.topShow}</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-emerald-600 transition-colors" />
+            <div className="flex gap-2">
+              <button 
+                onClick={() => onNavigate('schedule', { channel: channel.name })}
+                className="flex-1 bg-white border border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white font-bold text-xs py-2.5 rounded-lg transition-all"
+              >
+                View Schedule
+              </button>
+              <button 
+                onClick={() => onNavigate('explore', { channel: channel.name })}
+                className="flex-1 bg-emerald-600 text-white hover:bg-emerald-700 font-bold text-xs py-2.5 rounded-lg transition-all"
+              >
+                View Dramas
+              </button>
             </div>
           </div>
         ))}
