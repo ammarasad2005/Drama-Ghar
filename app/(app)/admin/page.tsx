@@ -22,7 +22,7 @@ function PageContent() {
     initialParams[key] = value;
   });
 
-  return <AdminScreen onNavigate={handleNavigate} user={user} initialParams={initialParams}  />;
+  return <AdminScreen />;
 }
 
 export default function Page() {

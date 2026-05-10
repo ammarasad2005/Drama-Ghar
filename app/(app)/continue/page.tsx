@@ -22,7 +22,7 @@ function PageContent() {
     initialParams[key] = value;
   });
 
-  return <ContinueWatchingScreen onNavigate={handleNavigate} user={user} initialParams={initialParams}  />;
+  return <ContinueWatchingScreen onNavigate={handleNavigate}  />;
 }
 
 export default function Page() {

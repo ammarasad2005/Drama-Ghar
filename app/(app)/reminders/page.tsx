@@ -22,7 +22,7 @@ function PageContent() {
     initialParams[key] = value;
   });
 
-  return <RemindersScreen onNavigate={handleNavigate} user={user} initialParams={initialParams}  />;
+  return <RemindersScreen onNavigate={handleNavigate}  />;
 }
 
 export default function Page() {

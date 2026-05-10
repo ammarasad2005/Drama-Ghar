@@ -22,7 +22,7 @@ function PageContent() {
     initialParams[key] = value;
   });
 
-  return <SettingsScreen onNavigate={handleNavigate} user={user} initialParams={initialParams}  />;
+  return <SettingsScreen onNavigate={handleNavigate} user={user}  />;
 }
 
 export default function Page() {

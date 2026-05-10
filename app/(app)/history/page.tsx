@@ -22,7 +22,7 @@ function PageContent() {
     initialParams[key] = value;
   });
 
-  return <HistoryScreen onNavigate={handleNavigate} user={user} initialParams={initialParams}  />;
+  return <HistoryScreen onNavigate={handleNavigate}  />;
 }
 
 export default function Page() {

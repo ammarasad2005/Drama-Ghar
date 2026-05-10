@@ -22,7 +22,7 @@ function PageContent() {
     initialParams[key] = value;
   });
 
-  return <ScheduleScreen onNavigate={handleNavigate} user={user} initialParams={initialParams} initialChannel={searchParams.get("channel") || "All Channels"} />;
+  return <ScheduleScreen onNavigate={handleNavigate} initialChannel={searchParams.get("channel") || "All Channels"} />;
 }
 
 export default function Page() {

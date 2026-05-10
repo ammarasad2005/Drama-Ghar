@@ -22,7 +22,7 @@ function PageContent() {
     initialParams[key] = value;
   });
 
-  return <ChannelsScreen onNavigate={handleNavigate} user={user} initialParams={initialParams} onChannelClick={(c: string) => { window.location.href = `/schedule?channel=${c}`; }} />;
+  return <ChannelsScreen onNavigate={handleNavigate} onChannelClick={(c: string) => { window.location.href = `/schedule?channel=${c}`; }} />;
 }
 
 export default function Page() {

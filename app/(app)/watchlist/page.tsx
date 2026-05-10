@@ -22,7 +22,7 @@ function PageContent() {
     initialParams[key] = value;
   });
 
-  return <WatchlistScreen onNavigate={handleNavigate} user={user} initialParams={initialParams}  />;
+  return <WatchlistScreen onNavigate={handleNavigate}  />;
 }
 
 export default function Page() {
