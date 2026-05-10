@@ -31,13 +31,16 @@ export default function ExploreScreen({ onNavigate, initialParams }: ExploreScre
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(initialParams?.search || "");
   const [debouncedSearch, setDebouncedSearch] = useState(initialParams?.search || "");
-  const [formatFilter, setFormatFilter] = useState("");
+  const [formatFilter, setFormatFilter] = useState(initialParams?.channel || "");
   const [statusFilter, setStatusFilter] = useState("");
 
   useEffect(() => {
     if (initialParams?.search) {
       setSearch(initialParams.search);
       setDebouncedSearch(initialParams.search);
+    }
+    if (initialParams?.channel) {
+      setFormatFilter(initialParams.channel);
     }
   }, [initialParams]);
   const [page, setPage] = useState(1);
@@ -68,7 +71,8 @@ export default function ExploreScreen({ onNavigate, initialParams }: ExploreScre
         params.set("page", pageNum.toString());
         params.set("limit", limit.toString());
         if (debouncedSearch) params.set("search", debouncedSearch);
-        if (formatFilter) params.set("format", formatFilter);
+        // Using formatFilter as channel filter as requested
+        if (formatFilter) params.set("channel", formatFilter);
         if (statusFilter) params.set("status", statusFilter);
 
         const res = await fetch(`/api/dramas?${params.toString()}`);

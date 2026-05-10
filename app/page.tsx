@@ -124,8 +124,12 @@ export default function App() {
     if (params?.slug) {
       setDramaSlug(params.slug);
     }
-    if (screen === 'explore') {
+    // Correctly handle navigation params for explore/schedule
+    if (screen === 'explore' || screen === 'schedule') {
       setExploreParams(params);
+      if (params?.channel) {
+        setSelectedChannel(params.channel);
+      }
     }
     setCurrentScreen(screen);
     setIsSidebarOpen(false);

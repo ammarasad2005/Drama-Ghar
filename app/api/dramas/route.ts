@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get("search") || "";
   const status = searchParams.get("status") || "";
   const format = searchParams.get("format") || "";
+  const channel = searchParams.get("channel") || "";
 
   const offset = (page - 1) * limit;
 
@@ -33,6 +34,9 @@ export async function GET(request: NextRequest) {
     }
     if (format) {
       params.set("format", `eq.${format}`);
+    }
+    if (channel) {
+        params.set("channel_name", `eq.${channel}`);
     }
 
     const res = await fetch(`${SUPABASE_URL}/rest/v1/programs?${params.toString()}`, {
