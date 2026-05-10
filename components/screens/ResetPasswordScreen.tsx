@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const resetPasswordSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
@@ -26,6 +27,7 @@ export function ResetPasswordScreen({ email, token, onSuccess }: ResetPasswordSc
   const [apiError, setApiError] = useState('');
   const [apiMessage, setApiMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const isMobile = useIsMobile();
 
   const form = useForm<ResetPasswordValues>({
     resolver: zodResolver(resetPasswordSchema),
@@ -59,15 +61,17 @@ export function ResetPasswordScreen({ email, token, onSuccess }: ResetPasswordSc
     }
   };
 
+  const bgImage = isMobile ? 'url("/login-mobile.jpg")' : 'url("/login-bg.jpg")';
+
   return (
     <div 
       className="min-h-screen flex w-full relative bg-cover bg-center bg-no-repeat transition-opacity duration-500"
-      style={{ backgroundImage: 'url("/login-bg.jpg")' }}
+      style={{ backgroundImage: bgImage }}
     >
-      <div className="w-[50%] hidden lg:block"></div>
+      {!isMobile && <div className="w-[50%] hidden lg:block"></div>}
 
-      <div className="flex-1 flex items-center justify-center p-8 z-10 lg:pr-24">
-        <div className="w-full max-w-md bg-[#f0e6d0] rounded-2xl shadow-2xl overflow-hidden border p-8 pt-10" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
+      <div className="flex-1 flex items-center justify-center p-6 z-10 lg:pr-24">
+        <div className="w-full max-w-md bg-[#f0e6d0]/90 lg:bg-[#f0e6d0] backdrop-blur-md lg:backdrop-blur-none rounded-2xl shadow-2xl overflow-hidden border p-8 pt-10" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold mb-2" style={{ color: '#2a1f0e' }}>Set New Password</h2>
             <p className="text-sm" style={{ color: '#6b5530' }}>
