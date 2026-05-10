@@ -1,14 +1,57 @@
-import React from 'react';
-import { Search } from 'lucide-react';
+'use client';
+import React, { useState, useEffect } from 'react';
+import { Search, Loader2, Clock } from 'lucide-react';
 import Image from 'next/image';
 
-export function HistoryScreen() {
-  const history = [
-    { title: 'Jaan Nisar', ep: 'Episode 2', date: 'Today', progress: 100, image: 'https://picsum.photos/seed/jaan/200/120' },
-    { title: 'Mere Humsafar', ep: 'Episode 18', date: 'Yesterday', progress: 100, image: 'https://picsum.photos/seed/mere/200/120' },
-    { title: 'Mannat Murad', ep: 'Episode 7', date: '20 May 2024', progress: 100, image: 'https://picsum.photos/seed/mannat/200/120' },
-    { title: 'Kaisi Teri Khudgharzi', ep: 'Episode 11', date: '19 May 2024', progress: 100, image: 'https://picsum.photos/seed/kaisi/200/120' },
-  ];
+interface HistoryItem {
+  _id: string;
+  slug: string;
+  title: string;
+  episode: string;
+  progress: number;
+  image: string;
+  lastWatched: string;
+}
+
+interface HistoryScreenProps {
+  onNavigate: (tab: string) => void;
+}
+
+export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const fetchHistory = async () => {
+    try {
+      const res = await fetch('/api/history');
+      const data = await res.json();
+      if (res.ok) {
+        setHistory(data.items || []);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchHistory();
+  }, []);
+
+  const filteredHistory = history.filter(item => 
+    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 overflow-y-auto px-8 py-6">
@@ -23,31 +66,50 @@ export function HistoryScreen() {
           <input 
             type="text" 
             placeholder="Search history..." 
-            className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent w-64"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-100 w-64"
           />
         </div>
       </div>
 
-      <div className="space-y-6">
-        {history.map((item, i) => (
-          <div key={i} className="flex gap-6 group hover:bg-white rounded-xl p-3 -mx-3 transition-colors border border-transparent hover:border-gray-100 hover:shadow-sm">
-             <div className="relative w-40 h-24 rounded-lg overflow-hidden shrink-0 bg-gray-100">
-               <Image src={item.image} alt={item.title} fill className="object-cover" referrerPolicy="no-referrer" />
-               <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
-                 <div className="h-full bg-emerald-700" style={{ width: `${item.progress}%` }}></div>
-               </div>
-             </div>
-             
-             <div className="flex-1 py-1 flex flex-col justify-center">
-               <div className="flex justify-between items-start mb-1">
-                 <h3 className="font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">{item.title}</h3>
-                 <span className="text-xs font-medium text-gray-400">{item.date}</span>
-               </div>
-               <p className="text-sm text-gray-500">{item.ep}</p>
-             </div>
-          </div>
-        ))}
-      </div>
+      {filteredHistory.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+          <Clock className="w-12 h-12 mb-4 opacity-20" />
+          <p>No history found.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredHistory.map((item) => (
+            <div key={item._id} className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+              <div className="relative h-40">
+                <Image 
+                  src={item.image || 'https://picsum.photos/seed/drama/400/225'} 
+                  alt={item.title} 
+                  fill 
+                  className="object-cover group-hover:scale-105 transition-transform duration-300" 
+                />
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
+                  <div 
+                    className="h-full bg-emerald-600" 
+                    style={{ width: `${item.progress}%` }}
+                  />
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-gray-900 mb-1">{item.title}</h3>
+                <p className="text-xs text-gray-500 mb-3">{item.episode}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-gray-400 font-medium uppercase">
+                    {new Date(item.lastWatched).toLocaleDateString()}
+                  </span>
+                  <button className="text-emerald-700 text-xs font-bold hover:underline">Resume</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
