@@ -15,6 +15,10 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: 'DramaGhar',
   description: 'Track your favorite Pakistani dramas',
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
