@@ -4,8 +4,11 @@ import mongoose from 'mongoose';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
+    const { name } = await req.json().catch(() => ({ name: null }));
+    const guestName = name || 'Guest Explorer';
+    
     // Generate a valid transient ObjectId for the guest
     const guestId = new mongoose.Types.ObjectId().toHexString();
     const guestEmail = `guest_${guestId.substring(0, 8)}@dramaghar.local`;
@@ -15,7 +18,7 @@ export async function POST() {
       userId: guestId,
       email: guestEmail,
       role: 'user', // Treat them as a regular user for DB schema compatibility
-      name: 'Guest Explorer',
+      name: guestName,
       isGuest: true,
     }, true); // Remember guest by default so they don't lose data immediately
 
@@ -24,7 +27,7 @@ export async function POST() {
       user: { 
         email: guestEmail, 
         role: 'user', 
-        name: 'Guest Explorer',
+        name: guestName,
         isGuest: true
       } 
     });

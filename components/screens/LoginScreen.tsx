@@ -108,7 +108,11 @@ export function LoginScreen({ onLogin, onForgotPassword }: LoginScreenProps) {
     setIsLoading(true);
     setApiError('');
     try {
-      const res = await fetch('/api/auth/guest', { method: 'POST' });
+      const res = await fetch('/api/auth/guest', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: guestName || 'Guest Explorer' })
+      });
       if (res.ok) {
         onLogin();
       } else {
@@ -299,6 +303,42 @@ export function LoginScreen({ onLogin, onForgotPassword }: LoginScreenProps) {
               </div>
 
               <button type="submit" disabled={isLoading} className="w-full font-medium py-2.5 rounded-lg mt-6 shadow-sm transition-opacity hover:opacity-90 flex justify-center items-center" style={{ backgroundColor: '#0f3d26', color: '#f0e6d0' }}>
+                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign Up'}
+              </button>
+            </form>
+          )}
+
+          {!isGuestPrompt && (
+            <>
+              <p className="text-center mt-8 text-sm" style={{ color: '#6b5530' }}>
+                {isLogin ? "New here? " : "Already have an account? "}
+                <a href="#" onClick={(e) => { e.preventDefault(); setIsLogin(!isLogin); setApiError(''); }} className="font-medium hover:underline" style={{ color: '#1a4a30' }}>
+                  {isLogin ? "Create an account" : "Sign In"}
+                </a>
+              </p>
+
+              <div className="mt-6 flex flex-col items-center gap-4">
+                <div className="flex items-center w-full">
+                  <div className="flex-1 border-t border-gray-300 dark:border-neutral-700"></div>
+                  <span className="px-3 text-xs text-gray-500 uppercase tracking-widest">Or</span>
+                  <div className="flex-1 border-t border-gray-300 dark:border-neutral-700"></div>
+                </div>
+                <button 
+                  onClick={(e) => { e.preventDefault(); setIsGuestPrompt(true); setApiError(''); }}
+                  disabled={isLoading}
+                  className="w-full font-medium py-2.5 rounded-lg border-2 border-[#1a4a30] text-[#1a4a30] hover:bg-[#1a4a30] hover:text-[#f0e6d0] transition-colors"
+                >
+                  Continue as Guest
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+d-lg mt-6 shadow-sm transition-opacity hover:opacity-90 flex justify-center items-center" style={{ backgroundColor: '#0f3d26', color: '#f0e6d0' }}>
                 {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign Up'}
               </button>
             </form>
