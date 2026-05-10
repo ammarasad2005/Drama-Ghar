@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { EyeOff } from 'lucide-react';
 
 interface LoginScreenProps {
@@ -6,9 +8,48 @@ interface LoginScreenProps {
 }
 
 export function LoginScreen({ onLogin }: LoginScreenProps) {
+  const [bgLoaded, setBgLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/login-bg.jpg';
+    img.onload = () => {
+      setBgLoaded(true);
+    };
+  }, []);
+
+  if (!bgLoaded) {
+    return (
+      <div className="min-h-screen flex w-full relative bg-[#0a1f18] animate-pulse">
+        {/* Spacer to push form to the right */}
+        <div className="w-[50%] hidden lg:block"></div>
+
+        {/* Right side form skeleton */}
+        <div className="flex-1 flex items-center justify-center p-8 z-10 lg:pr-24">
+          <div className="w-full max-w-md bg-[#f0e6d0]/20 rounded-2xl shadow-2xl h-[550px] border" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
+            <div className="flex flex-col items-center justify-center h-full space-y-6 px-8">
+              <div className="w-3/4 h-8 bg-[#f0e6d0]/30 rounded-md"></div>
+              <div className="w-1/2 h-4 bg-[#f0e6d0]/20 rounded-md mb-8"></div>
+              
+              <div className="w-full flex gap-4">
+                <div className="w-1/2 h-10 bg-[#f0e6d0]/20 rounded-md"></div>
+                <div className="w-1/2 h-10 bg-[#f0e6d0]/20 rounded-md"></div>
+              </div>
+
+              <div className="w-full h-12 bg-[#f0e6d0]/20 rounded-lg"></div>
+              <div className="w-full h-12 bg-[#f0e6d0]/20 rounded-lg"></div>
+              
+              <div className="w-full h-12 bg-[#f0e6d0]/30 rounded-lg mt-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
-      className="min-h-screen flex w-full relative bg-cover bg-center bg-no-repeat"
+      className="min-h-screen flex w-full relative bg-cover bg-center bg-no-repeat transition-opacity duration-500"
       style={{ backgroundImage: 'url("/login-bg.jpg")' }} // The user must name their image login-bg.jpg and place it in the public folder
     >
       {/* Background text/logo is baked into the image from the user provided attachment, so we don't recreate the left side in HTML anymore */}
