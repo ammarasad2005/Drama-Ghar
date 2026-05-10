@@ -74,15 +74,14 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
         setTodaysPicks(picks);
       }
 
-      // Filter and sort: 3 hours ago to 3 hours ahead
-      const threeHours = 3 * 60 * 60 * 1000;
+      // Filter: Strictly programs currently airing (now is between start and end)
       const filtered = allPrograms
         .filter(p => {
           const start = new Date(p.start_time_pkt).getTime();
-          return start > (now - threeHours) && start < (now + threeHours);
+          const end = new Date(p.end_time_pkt).getTime();
+          return now >= start && now < end;
         })
-        .sort((a, b) => new Date(a.start_time_pkt).getTime() - new Date(b.start_time_pkt).getTime())
-        .slice(0, 10);
+        .sort((a, b) => new Date(a.start_time_pkt).getTime() - new Date(b.start_time_pkt).getTime());
 
       setSchedulePrograms(filtered);
     } catch (err) {
