@@ -4,6 +4,8 @@ import { User } from '@/models/User';
 import { createSession } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     await dbConnect();

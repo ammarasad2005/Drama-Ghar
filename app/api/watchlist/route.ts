@@ -3,6 +3,8 @@ import dbConnect from '@/lib/mongodb';
 import { Watchlist } from '@/models/Watchlist';
 import { getSession } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     await dbConnect();

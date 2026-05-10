@@ -4,6 +4,8 @@ import { User } from '@/models/User';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     await dbConnect();
