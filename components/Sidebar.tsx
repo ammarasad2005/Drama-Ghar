@@ -1,12 +1,14 @@
 import React from 'react';
-import { Home, Calendar, MonitorPlay, Bookmark, PlayCircle, Bell, Clock, Settings } from 'lucide-react';
+import { Home, Calendar, MonitorPlay, Bookmark, PlayCircle, Bell, Clock, Settings, UserCog, LogOut } from 'lucide-react';
 
 interface SidebarProps {
   currentTab: string;
   onTabChange: (tab: string) => void;
+  user: any;
+  onLogout: () => void;
 }
 
-export function Sidebar({ currentTab, onTabChange }: SidebarProps) {
+export function Sidebar({ currentTab, onTabChange, user, onLogout }: SidebarProps) {
   const mainNav = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'schedule', label: 'Schedule', icon: Calendar },
@@ -21,7 +23,11 @@ export function Sidebar({ currentTab, onTabChange }: SidebarProps) {
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
-  const renderNavItems = (items: typeof mainNav) => (
+  if (user?.role === 'admin') {
+    secondaryNav.push({ id: 'admin', label: 'Admin Dashboard', icon: UserCog });
+  }
+
+  const renderNavItems = (items: any[]) => (
     <ul className="space-y-1.5">
       {items.map((item) => {
         const Icon = item.icon;
@@ -58,8 +64,21 @@ export function Sidebar({ currentTab, onTabChange }: SidebarProps) {
         <div className="mb-6">
           {renderNavItems(mainNav)}
         </div>
-        <div>
+        <div className="mb-6">
           {renderNavItems(secondaryNav)}
+        </div>
+        <div className="px-0">
+          <ul className="space-y-1.5">
+            <li>
+              <button
+                onClick={onLogout}
+                className="w-full flex items-center gap-3 px-6 py-2.5 rounded-r-full text-sm font-medium transition-colors text-red-300 hover:bg-red-500/10 hover:text-red-200"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            </li>
+          </ul>
         </div>
       </nav>
 
