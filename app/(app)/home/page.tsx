@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { HomeScreen } from '@/components/screens/HomeScreen';
 import { useUser } from '@/context/UserContext';
 
-function PageContent({ params }: { params?: any }) {
+function PageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useUser();
@@ -22,13 +22,13 @@ function PageContent({ params }: { params?: any }) {
     initialParams[key] = value;
   });
 
-  return <HomeScreen onNavigate={handleNavigate} user={user} initialParams={initialParams} {...params} onChannelClick={(c: string) => { window.location.href = `/schedule?channel=${c}`; }} />;
+  return <HomeScreen onNavigate={handleNavigate} user={user} initialParams={initialParams} onChannelClick={(c: string) => { window.location.href = `/schedule?channel=${c}`; }} />;
 }
 
-export default function Page({ params }: { params?: any }) {
+export default function Page() {
   return (
     <Suspense fallback={<div className="p-8">Loading...</div>}>
-      <PageContent params={params} />
+      <PageContent />
     </Suspense>
   );
 }
