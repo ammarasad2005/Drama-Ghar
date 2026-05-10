@@ -104,8 +104,31 @@ export function LoginScreen({ onLogin, onForgotPassword }: LoginScreenProps) {
       <div className="min-h-screen flex w-full relative bg-[#0a1f18] animate-pulse">
         <div className="w-[50%] hidden lg:block"></div>
         <div className="flex-1 flex items-center justify-center p-8 z-10 lg:pr-24">
-          <div className="w-full max-w-md bg-[#f0e6d0]/20 rounded-2xl shadow-2xl h-[550px] border" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
-            {/* Skeleton content */}
+          <div className="w-full max-w-md bg-[#f0e6d0]/20 rounded-2xl shadow-2xl h-[550px] border p-8 pt-10" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
+            <div className="flex flex-col items-center mb-8">
+              <div className="w-48 h-8 bg-[#f0e6d0]/20 rounded-lg mb-4"></div>
+              <div className="w-64 h-4 bg-[#f0e6d0]/10 rounded-lg"></div>
+            </div>
+
+            <div className="flex border-b mb-8" style={{ borderColor: 'rgba(160, 120, 50, 0.2)' }}>
+              <div className="flex-1 pb-3 flex justify-center">
+                <div className="w-16 h-4 bg-[#f0e6d0]/20 rounded"></div>
+              </div>
+              <div className="flex-1 pb-3 flex justify-center">
+                <div className="w-16 h-4 bg-[#f0e6d0]/10 rounded"></div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="w-full h-11 bg-[#f0e6d0]/10 rounded-lg border" style={{ borderColor: 'rgba(160, 120, 50, 0.2)' }}></div>
+              <div className="w-full h-11 bg-[#f0e6d0]/10 rounded-lg border" style={{ borderColor: 'rgba(160, 120, 50, 0.2)' }}></div>
+              <div className="w-24 h-3 bg-[#f0e6d0]/10 rounded mt-4"></div>
+              <div className="w-full h-11 bg-[#f0e6d0]/20 rounded-lg mt-8"></div>
+            </div>
+
+            <div className="flex justify-center mt-8">
+              <div className="w-40 h-4 bg-[#f0e6d0]/10 rounded"></div>
+            </div>
           </div>
         </div>
       </div>
