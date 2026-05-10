@@ -13,6 +13,8 @@ import { RemindersScreen } from '@/components/screens/RemindersScreen';
 import { HistoryScreen } from '@/components/screens/HistoryScreen';
 import { SettingsScreen } from '@/components/screens/SettingsScreen';
 import { AdminScreen } from '@/components/screens/AdminScreen';
+import ExploreScreen from '@/components/screens/ExploreScreen';
+import DramaDetailScreen from '@/components/screens/DramaDetailScreen';
 import { ForgotPasswordScreen } from '@/components/screens/ForgotPasswordScreen';
 import { ResetPasswordScreen } from '@/components/screens/ResetPasswordScreen';
 import { AboutScreen } from '@/components/screens/AboutScreen';
@@ -27,6 +29,7 @@ export default function App() {
   // For Reset Password Flow
   const [resetToken, setResetToken] = useState<string | null>(null);
   const [resetEmail, setResetEmail] = useState<string | null>(null);
+  const [dramaSlug, setDramaSlug] = useState<string | null>(null);
 
   const navigateToSchedule = (channel: string) => {
     setSelectedChannel(channel);
@@ -116,24 +119,36 @@ export default function App() {
     );
   }
 
+  const handleNavigate = (screen: string, params?: any) => {
+    if (params?.slug) {
+      setDramaSlug(params.slug);
+    }
+    setCurrentScreen(screen);
+    setIsSidebarOpen(false);
+  };
+
   const renderScreen = () => {
     switch (currentScreen) {
       case 'home':
-        return <HomeScreen user={user} onNavigate={setCurrentScreen} onChannelClick={navigateToSchedule} />;
+        return <HomeScreen user={user} onNavigate={handleNavigate} onChannelClick={navigateToSchedule} />;
       case 'schedule':
-        return <ScheduleScreen onNavigate={setCurrentScreen} initialChannel={selectedChannel} />;
+        return <ScheduleScreen onNavigate={handleNavigate} initialChannel={selectedChannel} />;
       case 'watchlist':
-        return <WatchlistScreen onNavigate={setCurrentScreen} />;
+        return <WatchlistScreen onNavigate={handleNavigate} />;
+      case 'explore':
+        return <ExploreScreen onNavigate={handleNavigate} />;
+      case 'drama':
+        return <DramaDetailScreen slug={dramaSlug || ''} onNavigate={handleNavigate} user={user} />;
       case 'channels':
-        return <ChannelsScreen onNavigate={setCurrentScreen} onChannelClick={navigateToSchedule} />;
+        return <ChannelsScreen onNavigate={handleNavigate} onChannelClick={navigateToSchedule} />;
       case 'continue':
-        return <ContinueWatchingScreen onNavigate={setCurrentScreen} />;
+        return <ContinueWatchingScreen onNavigate={handleNavigate} />;
       case 'reminders':
-        return <RemindersScreen onNavigate={setCurrentScreen} />;
+        return <RemindersScreen onNavigate={handleNavigate} />;
       case 'history':
-        return <HistoryScreen onNavigate={setCurrentScreen} />;
+        return <HistoryScreen onNavigate={handleNavigate} />;
       case 'settings':
-        return <SettingsScreen user={user} onNavigate={setCurrentScreen} />;
+        return <SettingsScreen user={user} onNavigate={handleNavigate} />;
       case 'about':
         return <AboutScreen />;
       case 'admin':
@@ -153,7 +168,7 @@ export default function App() {
     <div className="flex h-screen bg-[#F9FAFB] dark:bg-[#050505] overflow-hidden">
       <Sidebar 
         currentTab={currentScreen} 
-        onTabChange={setCurrentScreen} 
+        onTabChange={handleNavigate} 
         user={user} 
         onLogout={handleLogout}
         isOpen={isSidebarOpen}
@@ -163,7 +178,7 @@ export default function App() {
       <div className="flex-1 flex flex-col lg:ml-64 overflow-hidden relative">
         <Header 
           user={user} 
-          onNavigate={setCurrentScreen} 
+          onNavigate={handleNavigate} 
           onLogout={handleLogout} 
           onMenuClick={() => setIsSidebarOpen(true)}
         />

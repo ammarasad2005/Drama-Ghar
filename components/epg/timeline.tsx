@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 interface TimelineProps {
   data: EpgData;
   currentDate: Date;
-  onProgramClick: (program: EpgProgram) => void;
+  onNavigate: (screen: string, params?: any) => void;
   className?: string;
   selectedChannelFilter?: string;
 }
@@ -29,7 +29,7 @@ const CHANNEL_ROW_HEIGHT = 80;
 const TIMELINE_WIDTH = 2880; // 120px per hour * 24 hours
 
 export const WebProgramTimeline = forwardRef<TimelineHandle, TimelineProps>(
-  ({ data, currentDate, onProgramClick, className, selectedChannelFilter = 'All Channels' }, ref) => {
+  ({ data, currentDate, onNavigate, className, selectedChannelFilter = 'All Channels' }, ref) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [currentTimeOffset, setCurrentTimeOffset] = useState<number>(-1);
     const timeZone = "Asia/Karachi";
@@ -249,7 +249,7 @@ export const WebProgramTimeline = forwardRef<TimelineHandle, TimelineProps>(
                   }}
                   className="scrollbar-hide"
                 >
-                  {channels.map((channel, idx) => (
+                  {filteredChannels.map((channel) => (
                     <ChannelRow
                       key={channel.id}
                       channel={channel}
@@ -259,7 +259,7 @@ export const WebProgramTimeline = forwardRef<TimelineHandle, TimelineProps>(
                       }}
                       timelineStartUTC={timelineStartUTC}
                       timeZone={timeZone}
-                      onProgramClick={onProgramClick}
+                      onNavigate={onNavigate}
                     />
                   ))}
                 </div>

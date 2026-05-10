@@ -13,7 +13,7 @@ interface ChannelRowProps {
   style: React.CSSProperties;
   timelineStartUTC: number;
   timeZone: string;
-  onProgramClick: (program: EpgProgram) => void;
+  onNavigate: (screen: string, params?: any) => void;
 }
 
 function getProgramStyle(
@@ -45,7 +45,7 @@ export function ChannelRow({
   style,
   timelineStartUTC,
   timeZone,
-  onProgramClick,
+  onNavigate,
 }: ChannelRowProps) {
   const logoUrl = channel.logo_path
     ? channel.logo_path.startsWith("http") ||
@@ -135,7 +135,7 @@ export function ChannelRow({
                 program.end_time_pkt,
                 timelineStartUTC
               )}
-              onClick={onProgramClick}
+              onNavigate={onNavigate}
               timeZone={timeZone}
             />
           ))}

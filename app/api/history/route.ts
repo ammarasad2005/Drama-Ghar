@@ -30,11 +30,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { slug, title, episode, progress, image } = await req.json();
+    const { slug, title, episode, progress, image, incrementMinutes } = await req.json();
+
+    const update: any = { title, progress, image, lastWatched: new Date() };
+    if (incrementMinutes) {
+      update.$inc = { watchDurationMinutes: incrementMinutes };
+    }
 
     const item = await History.findOneAndUpdate(
       { userId: session.userId, slug, episode },
-      { title, progress, image, lastWatched: new Date() },
+      update,
       { upsert: true, new: true }
     );
 
