@@ -92,6 +92,16 @@ export function WatchlistScreen({ onNavigate }: WatchlistScreenProps) {
     }
   };
 
+  const clearWatchlist = async () => {
+    if (!confirm('Are you sure you want to clear your entire watchlist?')) return;
+    try {
+      await fetch('/api/watchlist?all=true', { method: 'DELETE' });
+      fetchWatchlistAndSchedule();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const watchDrama = (program: any) => {
     onNavigate('drama', { slug: program.slug });
   };
@@ -109,9 +119,20 @@ export function WatchlistScreen({ onNavigate }: WatchlistScreenProps) {
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#F9FAFB] dark:bg-[#050505]">
-      <div className="px-4 lg:px-8 py-6 shrink-0 bg-white dark:bg-[#0a0a0a] border-b border-gray-100 dark:border-neutral-900 shadow-sm z-10">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">My Schedule</h1>
-        <p className="text-gray-500 text-sm">A personalized view of your dramas.</p>
+      <div className="px-4 lg:px-8 py-6 shrink-0 bg-white dark:bg-[#0a0a0a] border-b border-gray-100 dark:border-neutral-900 shadow-sm z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">My Schedule</h1>
+          <p className="text-gray-500 text-sm">A personalized view of your dramas.</p>
+        </div>
+        {trackedDramas.length > 0 && (
+          <button 
+            onClick={clearWatchlist}
+            className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors border border-red-100 dark:border-red-900/20"
+          >
+            <Trash2 size={16} />
+            Clear All
+          </button>
+        )}
       </div>
 
       <div className="flex-1 overflow-x-auto overflow-y-hidden p-4 lg:p-6">

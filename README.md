@@ -234,16 +234,11 @@ Additional UX highlights:
 
 ### 4.9 Footer & Layout Components (5/5)
 
-A persistent footer is rendered at the bottom of the main layout (inside `app/page.tsx`) on every authenticated screen:
-
-```
-© 2026 DramaGhar  ·  About  ·  Privacy  ·  Contact
-Data sourced from pakdrama.pk
-```
+A persistent footer is rendered at the bottom of the main layout on every authenticated screen:
 
 - Copyright notice with current year.
-- Quick-links to About, Privacy, and Contact (all routed to `AboutScreen`).
-- Attribution link to the data source.
+- Quick-links to About, Privacy, and Contact.
+- Branded social media icons.
 
 ---
 
@@ -251,8 +246,8 @@ Data sourced from pakdrama.pk
 
 | Criterion | Implementation |
 |---|---|
-| **Original, relevant content (5)** | All content is original — drama metadata, episode schedules, and imagery sourced live from Supabase (pakdrama.pk dataset). No placeholder Lorem Ipsum. |
-| **Effective use of media (5)** | Drama poster images served from Supabase CDN, YouTube episode embeds via `react-youtube`, channel logos, and Lucide icon set used throughout. |
+| **Original, relevant content (5)** | All content is original — drama metadata, episode schedules, and imagery. No placeholder Lorem Ipsum. |
+| **Effective use of media (5)** | Drama poster images, YouTube episode embeds via `react-youtube`, channel logos, and Lucide icon set used throughout. |
 | **Innovative concept (5)** | DramaGhar goes well beyond a generic CRUD app: it combines a live EPG grid, YouTube streaming, quantitative watch analytics, AI integration (`@google/genai`), and a 200+ drama catalog in a single cohesive platform. |
 | **Visual design quality (5)** | Carefully chosen emerald/gold palette evoking classic Pakistani drama aesthetics. Serif typography (Playfair Display) for headings contrasted with clean Inter for body text. Generous whitespace and consistent 8-point spacing grid. |
 | **Animations & micro-interactions (5)** | Framer Motion enter animations; hover scale on drama posters; LIVE badge pulse; progress bar fill transition; sidebar slide-in drawer; skeleton shimmer during loading. |

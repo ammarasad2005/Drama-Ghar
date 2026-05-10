@@ -82,3 +82,32 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    await dbConnect();
+    const session = await getSession();
+
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const slug = searchParams.get('slug');
+    const clearAll = searchParams.get('all') === 'true';
+
+    if (clearAll) {
+      await History.deleteMany({ userId: session.userId });
+      return NextResponse.json({ message: 'History cleared' });
+    }
+
+    if (!slug) {
+      return NextResponse.json({ error: 'Slug is required' }, { status: 400 });
+    }
+
+    await History.deleteMany({ userId: session.userId, slug });
+    return NextResponse.json({ message: 'Removed from history' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

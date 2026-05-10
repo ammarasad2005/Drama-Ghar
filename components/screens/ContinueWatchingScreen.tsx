@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Play, MoreVertical, Loader2, PlayCircle } from 'lucide-react';
+import { Play, MoreVertical, Loader2, PlayCircle, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 
 interface HistoryItem {
@@ -40,6 +40,30 @@ export function ContinueWatchingScreen({ onNavigate }: ContinueWatchingScreenPro
     fetchContinueWatching();
   }, []);
 
+  const removeFromHistory = async (e: React.MouseEvent, slug: string) => {
+    e.stopPropagation();
+    try {
+      const res = await fetch(`/api/history?slug=${slug}`, { method: 'DELETE' });
+      if (res.ok) {
+        setContent(content.filter(item => item.slug !== slug));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const clearHistory = async () => {
+    if (!confirm('Are you sure you want to clear your continue watching list?')) return;
+    try {
+      const res = await fetch('/api/history?all=true', { method: 'DELETE' });
+      if (res.ok) {
+        setContent([]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -50,9 +74,20 @@ export function ContinueWatchingScreen({ onNavigate }: ContinueWatchingScreenPro
 
   return (
     <div className="flex-1 overflow-y-auto px-4 lg:px-8 py-6 bg-white dark:bg-[#0a0a0a]">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Continue Watching</h1>
-        <p className="text-gray-500 text-sm font-medium">Pick up right where you left off.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Continue Watching</h1>
+          <p className="text-gray-500 text-sm font-medium">Pick up right where you left off.</p>
+        </div>
+        {content.length > 0 && (
+          <button 
+            onClick={clearHistory}
+            className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors border border-red-100 dark:border-red-900/20"
+          >
+            <Trash2 size={16} />
+            Clear All
+          </button>
+        )}
       </div>
 
       {content.length === 0 ? (
@@ -80,8 +115,12 @@ export function ContinueWatchingScreen({ onNavigate }: ContinueWatchingScreenPro
               <div className="p-4 lg:p-6 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="font-bold text-gray-900 dark:text-white text-base lg:text-lg line-clamp-2 pr-4">{item.title}</h3>
-                  <button className="text-gray-400 hover:text-gray-600 shrink-0">
-                    <MoreVertical className="w-5 h-5" />
+                  <button 
+                    onClick={(e) => removeFromHistory(e, item.slug)}
+                    className="text-gray-400 hover:text-red-600 transition-colors shrink-0"
+                    title="Remove from list"
+                  >
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
                 <p className="text-sm font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500 mb-4 sm:mb-auto">Episode {item.episode}</p>

@@ -66,6 +66,12 @@ export async function DELETE(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const slug = searchParams.get('slug');
+    const clearAll = searchParams.get('all') === 'true';
+
+    if (clearAll) {
+      await Watchlist.deleteMany({ userId: session.userId });
+      return NextResponse.json({ message: 'Watchlist cleared' });
+    }
 
     if (!slug) {
       return NextResponse.json({ error: 'Slug is required' }, { status: 400 });

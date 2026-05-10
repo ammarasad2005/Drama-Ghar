@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Search, Loader2, Clock, TrendingUp, Calendar, ArrowRight, BarChart3, Play } from 'lucide-react';
+import { Search, Loader2, Clock, TrendingUp, Calendar, ArrowRight, BarChart3, Play, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 
 interface HistoryItem {
@@ -41,6 +41,30 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchHistory();
   }, []);
+
+  const removeFromHistory = async (e: React.MouseEvent, slug: string) => {
+    e.stopPropagation();
+    try {
+      const res = await fetch(`/api/history?slug=${slug}`, { method: 'DELETE' });
+      if (res.ok) {
+        setHistory(history.filter(item => item.slug !== slug));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const clearHistory = async () => {
+    if (!confirm('Are you sure you want to clear your entire watch history? This will also reset your watch analytics.')) return;
+    try {
+      const res = await fetch('/api/history?all=true', { method: 'DELETE' });
+      if (res.ok) {
+        setHistory([]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const calculateAnalytics = () => {
     const now = new Date();
@@ -101,15 +125,26 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
           <p className="text-gray-500 text-sm">Quantitative tracking of your drama viewing.</p>
         </div>
         
-        <div className="relative w-full sm:w-64">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="Search history..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-100"
-          />
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-64">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Search history..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-100"
+            />
+          </div>
+          {history.length > 0 && (
+            <button 
+              onClick={clearHistory}
+              className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors border border-red-100 dark:border-red-900/20"
+              title="Clear All History"
+            >
+              <Trash2 size={18} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -197,7 +232,16 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
                 </div>
               </div>
 
-              <ArrowRight size={18} className="text-gray-300 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all mr-2" />
+              <div className="flex items-center gap-1">
+                <button 
+                  onClick={(e) => removeFromHistory(e, item.slug)}
+                  className="p-2 text-gray-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                  title="Remove from History"
+                >
+                  <Trash2 size={16} />
+                </button>
+                <ArrowRight size={18} className="text-gray-300 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all mr-2" />
+              </div>
             </div>
           ))}
         </div>

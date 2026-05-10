@@ -70,10 +70,6 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
                 <a href="#" className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-emerald-600 transition-colors"><Twitter size={14} /></a>
                 <a href="#" className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-emerald-600 transition-colors"><Instagram size={14} /></a>
               </div>
-              <div className="flex items-center gap-1 text-[10px]">
-                <span>Data sourced from</span>
-                <a href="https://pakdrama.pk" target="_blank" rel="noreferrer" className="text-emerald-700 font-bold hover:underline">pakdrama.pk</a>
-              </div>
             </div>
           </footer>
         </div>
