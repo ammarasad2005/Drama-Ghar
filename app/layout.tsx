@@ -21,11 +21,15 @@ export const metadata: Metadata = {
   },
 };
 
+import { UserProvider } from '@/context/UserContext';
+
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} font-sans bg-[#F9FAFB] text-slate-900 suppressHydrationWarning`}>
-        {children}
+        <UserProvider>
+          {children}
+        </UserProvider>
       </body>
     </html>
   );

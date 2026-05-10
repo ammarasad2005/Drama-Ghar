@@ -56,6 +56,21 @@ export function AdminScreen() {
     }
   };
 
+  const deleteUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to permanently delete this user?')) return;
+    try {
+      const res = await fetch(`/api/admin/users?userId=${userId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setUsers(users.filter(u => u._id !== userId));
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Failed to delete user');
+      }
+    } catch (err) {
+      alert('An error occurred');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -127,9 +142,15 @@ export function AdminScreen() {
                       </select>
                       <button
                         onClick={() => updateUser(user._id, { status: user.status === 'active' ? 'inactive' : 'active' })}
-                        className={`text-xs font-medium px-2 py-1.5 rounded border ${user.status === 'active' ? 'bg-white text-red-600 border-red-200 hover:bg-red-50 dark:bg-neutral-900 dark:border-red-900 dark:hover:bg-red-900/20' : 'bg-white text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:bg-neutral-900 dark:border-emerald-900 dark:hover:bg-emerald-900/20'}`}
+                        className={`text-xs font-medium px-2 py-1.5 rounded border ${user.status === 'active' ? 'bg-white text-orange-600 border-orange-200 hover:bg-orange-50 dark:bg-neutral-900 dark:border-orange-900 dark:hover:bg-orange-900/20' : 'bg-white text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:bg-neutral-900 dark:border-emerald-900 dark:hover:bg-emerald-900/20'}`}
                       >
                         {user.status === 'active' ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button
+                        onClick={() => deleteUser(user._id)}
+                        className="text-xs font-medium px-2 py-1.5 rounded border bg-white text-red-600 border-red-200 hover:bg-red-50 dark:bg-neutral-900 dark:border-red-900 dark:hover:bg-red-900/20"
+                      >
+                        Delete
                       </button>
                     </div>
                   </td>

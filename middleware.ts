@@ -35,8 +35,8 @@ export async function middleware(request: NextRequest) {
     }
   } else {
     // Unauthenticated user route protection
-    const protectedRoutes = ['/history', '/reminders', '/settings', '/my-schedule', '/admin'];
-    if (protectedRoutes.some((pr) => path.startsWith(pr))) {
+    const publicRoutes = ['/login', '/signup', '/api/auth/login', '/api/auth/register', '/api/auth/guest', '/forgot-password', '/reset-password'];
+    if (!publicRoutes.some((pr) => path.startsWith(pr))) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
   }
