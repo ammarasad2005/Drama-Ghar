@@ -4,7 +4,7 @@ import { Info, Mail, Github, Heart, ShieldCheck, Globe } from 'lucide-react';
 
 export function AboutScreen() {
   return (
-    <div className="flex-1 overflow-y-auto px-8 py-6 bg-[#F9FAFB] dark:bg-[#050505]">
+    <div className="flex-1 overflow-y-auto px-4 lg:px-8 py-6 bg-[#F9FAFB] dark:bg-[#050505]">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">About DramaGhar</h1>
         <p className="text-gray-500 text-sm">Everything you need to know about the platform.</p>
@@ -12,14 +12,14 @@ export function AboutScreen() {
 
       <div className="max-w-4xl space-y-8 pb-12">
         {/* Platform Mission */}
-        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-gray-100 dark:border-neutral-800 p-8 shadow-sm">
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-gray-100 dark:border-neutral-800 p-6 lg:p-8 shadow-sm">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-700 dark:text-emerald-500">
               <Globe className="w-6 h-6" />
             </div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Our Mission</h2>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm lg:text-base">
             DramaGhar was built with a single goal: to simplify how Pakistani drama lovers discover and track their favorite shows. 
             We aggregate live broadcast data from all major networks including ARY, Hum, Geo, Green, and Express, ensuring you never miss an episode. 
             With personalized scheduling and watch history, the platform evolves with your viewing habits.

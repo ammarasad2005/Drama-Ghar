@@ -109,14 +109,14 @@ export function LoginScreen({ onLogin, onForgotPassword }: LoginScreenProps) {
     return (
       <div className="min-h-screen flex w-full relative bg-[#0a1f18] animate-pulse">
         {!isMobile && <div className="w-[50%] hidden lg:block"></div>}
-        <div className="flex-1 flex items-center justify-center p-6 z-10 lg:pr-24">
-          <div className="w-full max-w-md bg-[#f0e6d0]/20 rounded-2xl shadow-2xl h-[550px] border p-8 pt-10" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
-            <div className="flex flex-col items-center mb-8">
-              <div className="w-48 h-8 bg-[#f0e6d0]/20 rounded-lg mb-4"></div>
-              <div className="w-64 h-4 bg-[#f0e6d0]/10 rounded-lg"></div>
+        <div className="flex-1 flex items-center justify-center p-4 z-10 lg:pr-24">
+          <div className="w-full max-w-md bg-[#f0e6d0]/20 rounded-2xl shadow-2xl h-[500px] lg:h-[550px] border p-6 lg:p-8 pt-8 lg:pt-10" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
+            <div className="flex flex-col items-center mb-6 lg:mb-8">
+              <div className="w-40 lg:w-48 h-6 lg:h-8 bg-[#f0e6d0]/20 rounded-lg mb-3 lg:mb-4"></div>
+              <div className="w-56 lg:w-64 h-3 lg:h-4 bg-[#f0e6d0]/10 rounded-lg"></div>
             </div>
 
-            <div className="flex border-b mb-8" style={{ borderColor: 'rgba(160, 120, 50, 0.2)' }}>
+            <div className="flex border-b mb-6 lg:mb-8" style={{ borderColor: 'rgba(160, 120, 50, 0.2)' }}>
               <div className="flex-1 pb-3 flex justify-center">
                 <div className="w-16 h-4 bg-[#f0e6d0]/20 rounded"></div>
               </div>
@@ -148,16 +148,16 @@ export function LoginScreen({ onLogin, onForgotPassword }: LoginScreenProps) {
     >
       {!isMobile && <div className="w-[50%] hidden lg:block"></div>}
 
-      <div className="flex-1 flex items-center justify-center p-6 z-10 lg:pr-24">
-        <div className="w-full max-w-md bg-[#f0e6d0]/90 lg:bg-[#f0e6d0] backdrop-blur-md lg:backdrop-blur-none rounded-2xl shadow-2xl overflow-hidden border p-8 pt-10" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold mb-2" style={{ color: '#2a1f0e' }}>Welcome to DramaGhar</h2>
-            <p className="text-sm" style={{ color: '#6b5530' }}>
-              {isLogin ? 'Sign in to continue to your account' : 'Create an account to track your dramas'}
+      <div className="flex-1 flex items-center justify-center p-4 z-10 lg:pr-24">
+        <div className="w-full max-w-md bg-[#f0e6d0]/70 lg:bg-[#f0e6d0] backdrop-blur-xl lg:backdrop-blur-none rounded-2xl shadow-2xl overflow-hidden border p-6 lg:p-8 pt-8 lg:pt-10" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
+          <div className="text-center mb-6 lg:mb-8">
+            <h2 className="text-xl lg:text-2xl font-bold mb-1 lg:mb-2" style={{ color: '#2a1f0e' }}>Welcome to DramaGhar</h2>
+            <p className="text-xs lg:text-sm" style={{ color: '#6b5530' }}>
+              {isLogin ? 'Sign in to continue' : 'Create an account to track dramas'}
             </p>
           </div>
 
-          <div className="flex border-b mb-8" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
+          <div className="flex border-b mb-6 lg:mb-8" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
             <button 
               onClick={() => { setIsLogin(true); setApiError(''); }}
               className={`flex-1 pb-3 font-medium transition-opacity ${isLogin ? 'border-b-2' : 'opacity-60 hover:opacity-100'}`} 

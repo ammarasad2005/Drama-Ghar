@@ -35,7 +35,6 @@ export function SettingsScreen({ user, onNavigate }: SettingsScreenProps) {
       });
       if (res.ok) {
         setIsEditing(false);
-        // We might want a global user update, but for now we'll just reload or trust the session cookie
         window.location.reload(); 
       }
     } catch (err) {
@@ -55,7 +54,7 @@ export function SettingsScreen({ user, onNavigate }: SettingsScreenProps) {
   const getInitial = () => userName.charAt(0).toUpperCase();
 
   return (
-    <div className="flex-1 overflow-y-auto px-8 py-6 bg-[#F9FAFB] dark:bg-[#050505]">
+    <div className="flex-1 overflow-y-auto px-4 lg:px-8 py-6 bg-[#F9FAFB] dark:bg-[#050505]">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Settings</h1>
         <p className="text-gray-500 text-sm">Manage your account preferences.</p>
@@ -64,39 +63,39 @@ export function SettingsScreen({ user, onNavigate }: SettingsScreenProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-gray-200 dark:border-neutral-800 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-gray-100 dark:border-neutral-800 flex items-center justify-between">
+            <div className="p-4 lg:p-6 border-b border-gray-100 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4 flex-1">
-                <div className="w-16 h-16 rounded-full bg-emerald-700 text-white flex items-center justify-center text-2xl font-medium shadow-inner shrink-0">
+                <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-emerald-700 text-white flex items-center justify-center text-xl lg:text-2xl font-medium shadow-inner shrink-0">
                   {getInitial()}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   {isEditing ? (
-                    <div className="flex items-center gap-2 max-w-sm">
+                    <div className="flex items-center gap-2 w-full max-w-sm">
                       <input 
                         type="text" 
                         value={newName} 
                         onChange={(e) => setNewName(e.target.value)}
-                        className="flex-1 px-3 py-1.5 bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="flex-1 px-3 py-1.5 bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 min-w-0"
                         autoFocus
                       />
                       <button 
                         onClick={handleUpdateName}
                         disabled={isUpdating}
-                        className="p-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
+                        className="p-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 shrink-0"
                       >
                         {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
                       </button>
                       <button 
                         onClick={() => { setIsEditing(false); setNewName(userName); }}
-                        className="p-2 bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-200"
+                        className="p-2 bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-200 shrink-0"
                       >
                         <X className="w-4 h-4" />
                       </button>
                     </div>
                   ) : (
                     <>
-                      <h2 className="text-lg font-bold text-gray-900 dark:text-white">{userName}</h2>
-                      <p className="text-sm text-gray-500">{user?.email}</p>
+                      <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">{userName}</h2>
+                      <p className="text-sm text-gray-500 truncate">{user?.email}</p>
                     </>
                   )}
                 </div>
@@ -104,7 +103,7 @@ export function SettingsScreen({ user, onNavigate }: SettingsScreenProps) {
               {!isEditing && (
                 <button 
                   onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 border border-gray-200 dark:border-neutral-700 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors text-gray-700 dark:text-gray-300"
+                  className="w-full sm:w-auto px-4 py-2 border border-gray-200 dark:border-neutral-700 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors text-gray-700 dark:text-gray-300"
                 >
                   Edit Profile
                 </button>
@@ -118,32 +117,32 @@ export function SettingsScreen({ user, onNavigate }: SettingsScreenProps) {
                   <button 
                     key={i} 
                     onClick={() => row.target && onNavigate(row.target)}
-                    className="w-full flex items-center p-6 hover:bg-gray-50 dark:hover:bg-neutral-800/50 transition-colors text-left group"
+                    className="w-full flex items-center p-4 lg:p-6 hover:bg-gray-50 dark:hover:bg-neutral-800/50 transition-colors text-left group"
                   >
-                    <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-500 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                    <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-500 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shrink-0">
                       <Icon className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 dark:text-white">{row.label}</h4>
+                      <h4 className="font-semibold text-gray-900 dark:text-white text-sm lg:text-base">{row.label}</h4>
                       <p className="text-xs text-gray-500">{row.desc}</p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-emerald-700 transition-colors" />
+                    <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-emerald-700 transition-colors shrink-0" />
                   </button>
                 );
               })}
               
               <button 
                 onClick={toggleDarkMode}
-                className="w-full flex items-center p-6 hover:bg-gray-50 dark:hover:bg-neutral-800/50 transition-colors text-left group"
+                className="w-full flex items-center p-4 lg:p-6 hover:bg-gray-50 dark:hover:bg-neutral-800/50 transition-colors text-left group"
               >
-                <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-500 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-500 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shrink-0">
                   <Moon className="w-5 h-5" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-gray-900 dark:text-white">Dark Mode</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-white text-sm lg:text-base">Dark Mode</h4>
                   <p className="text-xs text-gray-500">{isDarkMode ? 'Dark theme enabled' : 'Light theme enabled'}</p>
                 </div>
-                <div className={`w-10 h-5 rounded-full relative transition-colors duration-200 ${isDarkMode ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-neutral-700'}`}>
+                <div className={`w-10 h-5 rounded-full relative transition-colors duration-200 shrink-0 ${isDarkMode ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-neutral-700'}`}>
                     <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all duration-200 ${isDarkMode ? 'left-6' : 'left-1'}`}></div>
                 </div>
               </button>

@@ -22,6 +22,7 @@ export default function App() {
   const [user, setUser] = useState<any>(null);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [selectedChannel, setSelectedChannel] = useState('All Channels');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // For Reset Password Flow
   const [resetToken, setResetToken] = useState<string | null>(null);
@@ -149,20 +150,27 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-[#F9FAFB] overflow-hidden">
+    <div className="flex h-screen bg-[#F9FAFB] dark:bg-[#050505] overflow-hidden">
       <Sidebar 
         currentTab={currentScreen} 
         onTabChange={setCurrentScreen} 
         user={user} 
-        onLogout={handleLogout} 
+        onLogout={handleLogout}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
       />
       
-      <div className="flex-1 flex flex-col ml-64 overflow-hidden relative">
-        <Header user={user} onNavigate={setCurrentScreen} onLogout={handleLogout} />
+      <div className="flex-1 flex flex-col lg:ml-64 overflow-hidden relative">
+        <Header 
+          user={user} 
+          onNavigate={setCurrentScreen} 
+          onLogout={handleLogout} 
+          onMenuClick={() => setIsSidebarOpen(true)}
+        />
         <div className="flex-1 overflow-hidden flex flex-col">
           {renderScreen()}
           
-          <footer className="shrink-0 border-t border-gray-100 bg-white dark:bg-[#0a0a0a] px-8 py-4 flex items-center justify-between text-[10px] text-gray-400">
+          <footer className="shrink-0 border-t border-gray-100 dark:border-neutral-900 bg-white dark:bg-[#0a0a0a] px-4 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between text-[10px] text-gray-400 gap-4 sm:gap-0">
             <div className="flex items-center gap-4">
               <span>© 2026 DramaGhar</span>
               <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">About</button>

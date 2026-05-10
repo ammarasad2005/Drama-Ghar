@@ -61,12 +61,12 @@ export function ForgotPasswordScreen({ onBackToLogin }: ForgotPasswordScreenProp
     >
       {!isMobile && <div className="w-[50%] hidden lg:block"></div>}
 
-      <div className="flex-1 flex items-center justify-center p-6 z-10 lg:pr-24">
-        <div className="w-full max-w-md bg-[#f0e6d0]/90 lg:bg-[#f0e6d0] backdrop-blur-md lg:backdrop-blur-none rounded-2xl shadow-2xl overflow-hidden border p-8 pt-10" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold mb-2" style={{ color: '#2a1f0e' }}>Forgot Password</h2>
-            <p className="text-sm" style={{ color: '#6b5530' }}>
-              Enter your email to receive a reset link
+      <div className="flex-1 flex items-center justify-center p-4 z-10 lg:pr-24">
+        <div className="w-full max-w-md bg-[#f0e6d0]/70 lg:bg-[#f0e6d0] backdrop-blur-xl lg:backdrop-blur-none rounded-2xl shadow-2xl overflow-hidden border p-6 lg:p-8 pt-8 lg:pt-10" style={{ borderColor: 'rgba(160, 120, 50, 0.3)' }}>
+          <div className="text-center mb-6 lg:mb-8">
+            <h2 className="text-xl lg:text-2xl font-bold mb-1 lg:mb-2" style={{ color: '#2a1f0e' }}>Forgot Password</h2>
+            <p className="text-xs lg:text-sm" style={{ color: '#6b5530' }}>
+              Enter email to receive reset link
             </p>
           </div>
 
