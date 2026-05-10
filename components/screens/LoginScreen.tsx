@@ -26,9 +26,10 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 interface LoginScreenProps {
   onLogin: () => void;
+  onForgotPassword: () => void;
 }
 
-export function LoginScreen({ onLogin }: LoginScreenProps) {
+export function LoginScreen({ onLogin, onForgotPassword }: LoginScreenProps) {
   const [bgLoaded, setBgLoaded] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [apiError, setApiError] = useState('');
@@ -179,7 +180,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               </div>
 
               <div className="flex items-center justify-between mt-4">
-                <a href="#" className="text-xs hover:underline" style={{ color: '#1a4a30' }}>Forgot Password?</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); onForgotPassword(); }} className="text-xs hover:underline" style={{ color: '#1a4a30' }}>Forgot Password?</a>
               </div>
 
               <button type="submit" disabled={isLoading} className="w-full font-medium py-2.5 rounded-lg mt-6 shadow-sm transition-opacity hover:opacity-90 flex justify-center items-center" style={{ backgroundColor: '#0f3d26', color: '#f0e6d0' }}>

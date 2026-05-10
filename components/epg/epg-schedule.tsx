@@ -117,12 +117,26 @@ export function EpgSchedule({ selectedChannelFilter = 'All Channels' }: EpgSched
   }, [currentDateKey, scheduleCache]);
 
   const handleProgramClick = useCallback(
-    (program: EpgProgram) => {
+    async (program: EpgProgram) => {
       if (program.slug) {
-        // router.push(`/drama/${program.slug}`);
+        try {
+          const res = await fetch('/api/watchlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug: program.slug, title: program.title }),
+          });
+          const data = await res.json();
+          if (res.ok) {
+            alert(`Added ${program.title} to your Watchlist!`);
+          } else {
+            alert(data.error || 'Failed to add to watchlist');
+          }
+        } catch (err) {
+          alert('Error adding to watchlist');
+        }
       }
     },
-    [] // Removing router dependency as we commented out the push logic
+    []
   );
 
   const handleJumpToPrime = useCallback(() => {
