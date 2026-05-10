@@ -23,15 +23,23 @@ const STATUS_FILTERS = [
 
 interface ExploreScreenProps {
   onNavigate: (screen: string, params?: Record<string, string>) => void;
+  initialParams?: any;
 }
 
-export default function ExploreScreen({ onNavigate }: ExploreScreenProps) {
+export default function ExploreScreen({ onNavigate, initialParams }: ExploreScreenProps) {
   const [dramas, setDramas] = useState<Drama[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [search, setSearch] = useState(initialParams?.search || "");
+  const [debouncedSearch, setDebouncedSearch] = useState(initialParams?.search || "");
   const [formatFilter, setFormatFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+
+  useEffect(() => {
+    if (initialParams?.search) {
+      setSearch(initialParams.search);
+      setDebouncedSearch(initialParams.search);
+    }
+  }, [initialParams]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loadingMore, setLoadingMore] = useState(false);

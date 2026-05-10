@@ -3,13 +3,21 @@ import { Search, Bell, LogOut, Settings, User as UserIcon, ChevronDown, Menu } f
 
 interface HeaderProps {
   user: any;
-  onNavigate: (tab: string) => void;
+  onNavigate: (screen: string, params?: any) => void;
   onLogout: () => void;
   onMenuClick?: () => void;
 }
 
 export function Header({ user, onNavigate, onLogout, onMenuClick }: HeaderProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      onNavigate('explore', { search: searchQuery });
+    }
+  };
 
   const getInitials = (name: string) => {
     if (!name) return 'U';
@@ -27,14 +35,16 @@ export function Header({ user, onNavigate, onLogout, onMenuClick }: HeaderProps)
         >
           <Menu className="w-6 h-6" />
         </button>
-        <div className="relative w-48 lg:w-96 hidden sm:block">
+        <form onSubmit={handleSearch} className="relative w-48 lg:w-96 hidden sm:block">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input 
             type="text" 
-            placeholder="Search..." 
+            placeholder="Search dramas..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-neutral-900 border border-transparent focus:bg-white dark:focus:bg-black focus:border-emerald-200 dark:focus:border-emerald-900 focus:ring-2 focus:ring-emerald-50 dark:focus:ring-emerald-900/20 rounded-lg text-sm transition-all outline-none text-gray-900 dark:text-white"
           />
-        </div>
+        </form>
       </div>
 
       <div className="flex items-center gap-2 lg:gap-4">
