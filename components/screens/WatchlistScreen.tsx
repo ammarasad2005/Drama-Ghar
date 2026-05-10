@@ -14,10 +14,14 @@ interface TrackedDrama {
 interface ScheduleDay {
   dateObj: Date;
   label: string;
-  programs: (EpgProgram & { channelName: string })[];
+  programs: (EpgProgram & { channelName: string })[] | null;
 }
 
-export function WatchlistScreen() {
+interface WatchlistScreenProps {
+  onNavigate: (tab: string) => void;
+}
+
+export function WatchlistScreen({ onNavigate }: WatchlistScreenProps) {
   const [trackedDramas, setTrackedDramas] = useState<TrackedDrama[]>([]);
   const [scheduleData, setScheduleData] = useState<ScheduleDay[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,16 +29,12 @@ export function WatchlistScreen() {
   const fetchWatchlistAndSchedule = async () => {
     setIsLoading(true);
     try {
-      // 1. Fetch Watchlist
       const wlRes = await fetch('/api/watchlist');
       const wlData = await wlRes.json();
       const trackedSlugs = new Set((wlData.items || []).map((item: TrackedDrama) => item.slug));
       setTrackedDramas(wlData.items || []);
 
-      // 2. Fetch 7-day schedule
       const { rollingDates, todayBase } = getRollingDates();
-      // We only care about Today to +5 days for the "upcoming schedule" (or we can use all rolling dates)
-      // Filter out yesterday to focus on upcoming
       const upcomingDates = rollingDates.filter(d => d.getTime() >= todayBase.getTime());
 
       const daysPromises = upcomingDates.map(async (dateObj) => {
@@ -56,7 +56,6 @@ export function WatchlistScreen() {
           });
         }
 
-        // Sort by time
         dayPrograms.sort((a, b) => new Date(a.start_time_pkt).getTime() - new Date(b.start_time_pkt).getTime());
 
         let label = formatInTimeZone(dateObj, "Asia/Karachi", "EEEE");
@@ -87,8 +86,28 @@ export function WatchlistScreen() {
   const removeFromWatchlist = async (slug: string) => {
     try {
       await fetch(`/api/watchlist?slug=${slug}`, { method: 'DELETE' });
-      // Optimistic update
       fetchWatchlistAndSchedule(); 
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const watchDrama = async (program: any) => {
+    try {
+      const res = await fetch('/api/history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          slug: program.slug,
+          title: program.title,
+          episode: 'Episode 1',
+          progress: 5, 
+          image: `https://picsum.photos/seed/${program.slug}/400/225`
+        })
+      });
+      if (res.ok) {
+        onNavigate('continue');
+      }
     } catch (err) {
       console.error(err);
     }
@@ -120,13 +139,15 @@ export function WatchlistScreen() {
             </div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">No tracked dramas yet</h3>
             <p className="text-gray-500 text-sm mb-6">Explore the full schedule and add dramas to your watchlist to see them appear here.</p>
+            <button onClick={() => onNavigate('schedule')} className="px-6 py-2.5 bg-emerald-700 text-white rounded-lg font-bold shadow-sm hover:bg-emerald-800 transition-all">
+              Go to Schedule
+            </button>
           </div>
         ) : (
           <div className="flex h-full gap-4">
             {scheduleData.map((day) => (
               <div key={day.dateObj.toISOString()} className="flex flex-col w-72 shrink-0 h-full border border-gray-200 dark:border-neutral-800 rounded-xl bg-white dark:bg-[#0a0a0a] overflow-hidden shadow-sm">
                 
-                {/* Day Header */}
                 <div className="p-4 bg-gray-50 dark:bg-neutral-900/50 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between shrink-0">
                   <h3 className="font-bold text-gray-900 dark:text-white">{day.label}</h3>
                   <span className="text-xs font-semibold text-gray-500 bg-gray-200 dark:bg-neutral-800 px-2 py-1 rounded-md">
@@ -134,15 +155,14 @@ export function WatchlistScreen() {
                   </span>
                 </div>
 
-                {/* Programs List */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                  {day.programs.length === 0 ? (
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-hide">
+                  {day.programs && day.programs.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center opacity-50 py-10">
                       <Calendar className="w-8 h-8 text-gray-400 mb-2" />
                       <p className="text-xs font-medium text-gray-500">No episodes airing today</p>
                     </div>
                   ) : (
-                    day.programs.map((program, idx) => {
+                    day.programs && day.programs.map((program, idx) => {
                       const startTime = new Date(program.start_time_pkt);
                       const endTime = new Date(program.end_time_pkt);
                       const durationMins = Math.round((endTime.getTime() - startTime.getTime()) / 60000);
@@ -167,7 +187,11 @@ export function WatchlistScreen() {
                               {program.channelName}
                             </span>
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button className="p-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 rounded hover:bg-emerald-100 transition-colors" title="Watch Now">
+                              <button 
+                                onClick={() => watchDrama(program)}
+                                className="p-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 rounded hover:bg-emerald-100 transition-colors" 
+                                title="Watch Now"
+                              >
                                 <PlayCircle className="w-4 h-4" />
                               </button>
                               <button 

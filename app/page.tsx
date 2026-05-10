@@ -15,15 +15,22 @@ import { SettingsScreen } from '@/components/screens/SettingsScreen';
 import { AdminScreen } from '@/components/screens/AdminScreen';
 import { ForgotPasswordScreen } from '@/components/screens/ForgotPasswordScreen';
 import { ResetPasswordScreen } from '@/components/screens/ResetPasswordScreen';
+import { AboutScreen } from '@/components/screens/AboutScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
   const [user, setUser] = useState<any>(null);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
+  const [selectedChannel, setSelectedChannel] = useState('All Channels');
   
   // For Reset Password Flow
   const [resetToken, setResetToken] = useState<string | null>(null);
   const [resetEmail, setResetEmail] = useState<string | null>(null);
+
+  const navigateToSchedule = (channel: string) => {
+    setSelectedChannel(channel);
+    setCurrentScreen('schedule');
+  };
 
   const checkAuth = async () => {
     try {
@@ -110,21 +117,23 @@ export default function App() {
   const renderScreen = () => {
     switch (currentScreen) {
       case 'home':
-        return <HomeScreen />;
+        return <HomeScreen user={user} onNavigate={setCurrentScreen} onChannelClick={navigateToSchedule} />;
       case 'schedule':
-        return <ScheduleScreen />;
+        return <ScheduleScreen onNavigate={setCurrentScreen} initialChannel={selectedChannel} />;
       case 'watchlist':
-        return <WatchlistScreen />;
+        return <WatchlistScreen onNavigate={setCurrentScreen} />;
       case 'channels':
-        return <ChannelsScreen />;
+        return <ChannelsScreen onNavigate={setCurrentScreen} onChannelClick={navigateToSchedule} />;
       case 'continue':
-        return <ContinueWatchingScreen />;
+        return <ContinueWatchingScreen onNavigate={setCurrentScreen} />;
       case 'reminders':
-        return <RemindersScreen />;
+        return <RemindersScreen onNavigate={setCurrentScreen} />;
       case 'history':
-        return <HistoryScreen />;
+        return <HistoryScreen onNavigate={setCurrentScreen} />;
       case 'settings':
-        return <SettingsScreen />;
+        return <SettingsScreen user={user} onNavigate={setCurrentScreen} />;
+      case 'about':
+        return <AboutScreen />;
       case 'admin':
         return user?.role === 'admin' ? <AdminScreen /> : (
           <div className="flex-1 flex items-center justify-center text-red-500">Access Denied</div>
@@ -148,8 +157,23 @@ export default function App() {
       />
       
       <div className="flex-1 flex flex-col ml-64 overflow-hidden relative">
-        <Header />
-        {renderScreen()}
+        <Header user={user} onNavigate={setCurrentScreen} onLogout={handleLogout} />
+        <div className="flex-1 overflow-hidden flex flex-col">
+          {renderScreen()}
+          
+          <footer className="shrink-0 border-t border-gray-100 bg-white dark:bg-[#0a0a0a] px-8 py-4 flex items-center justify-between text-[10px] text-gray-400">
+            <div className="flex items-center gap-4">
+              <span>© 2026 DramaGhar</span>
+              <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">About</button>
+              <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">Privacy</button>
+              <button onClick={() => setCurrentScreen('about')} className="hover:text-emerald-700 transition-colors">Contact</button>
+            </div>
+            <div className="flex items-center gap-1">
+              <span>Data sourced from</span>
+              <a href="https://pakdrama.pk" target="_blank" rel="noreferrer" className="text-emerald-700 font-bold hover:underline">pakdrama.pk</a>
+            </div>
+          </footer>
+        </div>
       </div>
     </div>
   );

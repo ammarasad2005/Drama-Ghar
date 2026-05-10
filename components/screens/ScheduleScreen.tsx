@@ -1,10 +1,20 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, Clock } from 'lucide-react';
 import { EpgSchedule } from '@/components/epg/epg-schedule';
 
-export function ScheduleScreen() {
-  const [selectedChannel, setSelectedChannel] = useState('All Channels');
+interface ScheduleScreenProps {
+  onNavigate: (tab: string) => void;
+  initialChannel?: string;
+}
+
+export function ScheduleScreen({ onNavigate, initialChannel = 'All Channels' }: ScheduleScreenProps) {
+  const [selectedChannel, setSelectedChannel] = useState(initialChannel);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedChannel(initialChannel);
+  }, [initialChannel]);
 
   const channelsList = [
     'All Channels',
@@ -28,7 +38,7 @@ export function ScheduleScreen() {
           <select 
             value={selectedChannel}
             onChange={(e) => setSelectedChannel(e.target.value)}
-            className="appearance-none flex items-center gap-3 px-4 py-2 pr-10 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-neutral-800 cursor-pointer focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
+            className="appearance-none flex items-center gap-3 px-3 py-1.5 pr-10 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-neutral-800 cursor-pointer focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
           >
             {channelsList.map(channel => (
               <option key={channel} value={channel}>{channel}</option>
