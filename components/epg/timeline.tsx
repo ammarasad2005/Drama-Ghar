@@ -249,7 +249,7 @@ export const WebProgramTimeline = forwardRef<TimelineHandle, TimelineProps>(
                   }}
                   className="scrollbar-hide"
                 >
-                  {filteredChannels.map((channel) => (
+                  {channels.map((channel) => (
                     <ChannelRow
                       key={channel.id}
                       channel={channel}

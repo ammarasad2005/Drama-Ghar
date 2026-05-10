@@ -20,7 +20,7 @@ export async function GET(
 
   try {
     const dramaParams = new URLSearchParams();
-    dramaParams.set("select", "id,title,slug,poster_path,status,format,release_year,views,episode_count,description,director,channel_id,channel_name,schedule_days,schedule_time,genre,genre_list,ost_youtube_id,trailer_youtube_id");
+    dramaParams.set("select", "id,title,slug,poster_path,status,format,release_year,views,episode_count,description,director,channel_id,channel_name,schedule_days,schedule_time,genre,genre_list");
     dramaParams.set("slug", `eq.${slug}`);
     dramaParams.set("is_active", "eq.true");
     dramaParams.set("limit", "1");

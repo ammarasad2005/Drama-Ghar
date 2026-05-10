@@ -192,11 +192,22 @@ export default function DramaDetailScreen({ slug, onNavigate, user }: DramaDetai
 
   const posterUrl = getMediaUrl(drama.poster_path);
 
+  // Helper to extract YouTube ID
+  const getExtractedYoutubeId = (episode: Episode | null) => {
+    if (!episode) return null;
+    if (episode.youtube_id) return episode.youtube_id;
+    if (episode.video_url) {
+      const match = episode.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+      if (match && match[1]) return match[1];
+    }
+    return null;
+  };
+
   return (
-    <div className="flex flex-col animate-in fade-in duration-700">
+    <div className="flex flex-col flex-1 overflow-y-auto animate-in fade-in duration-700 pb-20">
       {/* Video Player Modal */}
       <VideoPlayerModal
-        youtubeId={playingEpisode?.youtube_id || null}
+        youtubeId={getExtractedYoutubeId(playingEpisode)}
         title={playingEpisode?.title || drama.title}
         onClose={handleClosePlayer}
         onProgress={handleTrackProgress}
