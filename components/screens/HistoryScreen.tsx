@@ -54,21 +54,21 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-8 py-6">
-      <div className="flex items-center justify-between mb-8">
+    <div className="flex-1 overflow-y-auto px-4 lg:px-8 py-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Watch History</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Watch History</h1>
           <p className="text-gray-500 text-sm">What you&apos;ve watched recently.</p>
         </div>
         
-        <div className="relative">
+        <div className="relative w-full sm:w-64">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input 
             type="text" 
             placeholder="Search history..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-100 w-64"
+            className="w-full pl-10 pr-4 py-2 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-100"
           />
         </div>
       </div>
@@ -79,9 +79,9 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
           <p>No history found.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredHistory.map((item) => (
-            <div key={item._id} className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+            <div key={item._id} className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-100 dark:border-neutral-800 overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
               <div className="relative h-40">
                 <Image 
                   src={item.image || 'https://picsum.photos/seed/drama/400/225'} 
@@ -89,7 +89,7 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
                   fill 
                   className="object-cover group-hover:scale-105 transition-transform duration-300" 
                 />
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 dark:bg-neutral-800">
                   <div 
                     className="h-full bg-emerald-600" 
                     style={{ width: `${item.progress}%` }}
@@ -97,13 +97,13 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
                 </div>
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-gray-900 mb-1">{item.title}</h3>
-                <p className="text-xs text-gray-500 mb-3">{item.episode}</p>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-1">{item.title}</h3>
+                <p className="text-xs text-gray-500 dark:text-slate-400 mb-3">{item.episode}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] text-gray-400 font-medium uppercase">
                     {new Date(item.lastWatched).toLocaleDateString()}
                   </span>
-                  <button className="text-emerald-700 text-xs font-bold hover:underline">Resume</button>
+                  <button className="text-emerald-700 dark:text-emerald-500 text-xs font-bold hover:underline">Resume</button>
                 </div>
               </div>
             </div>

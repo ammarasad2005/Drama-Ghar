@@ -59,9 +59,9 @@ export function RemindersScreen({ onNavigate }: RemindersScreenProps) {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-8 py-6">
+    <div className="flex-1 overflow-y-auto px-4 lg:px-8 py-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">My Reminders</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">My Reminders</h1>
         <p className="text-gray-500 text-sm">Don&apos;t miss an episode.</p>
       </div>
 
@@ -71,29 +71,29 @@ export function RemindersScreen({ onNavigate }: RemindersScreenProps) {
           <p>You have no reminders set.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-          <div className="divide-y divide-gray-100">
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-gray-200 dark:border-neutral-800 overflow-hidden shadow-sm">
+          <div className="divide-y divide-gray-100 dark:divide-neutral-800">
             {reminders.map((item) => (
-              <div key={item._id} className="flex items-center gap-6 p-6 hover:bg-gray-50 transition-colors group">
-                <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100 shadow-sm">
+              <div key={item._id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-6 p-4 lg:p-6 hover:bg-gray-50 dark:hover:bg-neutral-800/50 transition-colors group relative">
+                <div className="relative w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100 dark:border-neutral-800 shadow-sm">
                   <Image src={item.image || 'https://picsum.photos/seed/drama/200/200'} alt={item.title} fill className="object-cover" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 w-full">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-gray-900 text-lg">{item.title}</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-white text-base lg:text-lg">{item.title}</h3>
                   </div>
-                  <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs lg:text-sm">
+                    <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-500 font-semibold">
                       <CalendarIcon className="w-4 h-4" />
                       {item.time}
                     </div>
-                    <div className="text-gray-500">•</div>
-                    <div className="text-gray-600 font-medium">{item.channel}</div>
+                    <div className="hidden sm:block text-gray-400">•</div>
+                    <div className="text-gray-600 dark:text-slate-400 font-medium">{item.channel}</div>
                   </div>
                 </div>
                 <button 
                   onClick={() => removeReminder(item.slug)}
-                  className="p-3 text-red-500 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                  className="absolute top-4 right-4 sm:relative sm:top-0 sm:right-0 p-2 lg:p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
                 >
                   <Trash2 className="w-5 h-5" />
                 </button>
