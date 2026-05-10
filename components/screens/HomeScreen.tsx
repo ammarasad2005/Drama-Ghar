@@ -24,6 +24,7 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
   const [upNext, setUpNext] = useState<HistoryItem | null>(null);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
+  const [loadingPicks, setLoadingPicks] = useState(true);
   const [schedulePrograms, setSchedulePrograms] = useState<(EpgProgram & { channelName: string })[]>([]);
   const [todaysPicks, setTodaysPicks] = useState<{slug: string, title: string, channel: string, time: string, image: string}[]>([]);
 
@@ -38,6 +39,20 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
       console.error(err);
     } finally {
       setLoadingHistory(false);
+    }
+  };
+
+  const fetchRecommendations = async () => {
+    try {
+      const res = await fetch('/api/recommendations');
+      const data = await res.json();
+      if (res.ok && data.items) {
+        setTodaysPicks(data.items);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingPicks(false);
     }
   };
 
@@ -58,20 +73,6 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
             });
           }
         });
-      }
-
-      // Today's Picks: Pick 3 random programs
-      if (allPrograms.length > 0) {
-        const filteredForPicks = allPrograms.filter(p => p.slug);
-        const shuffled = [...filteredForPicks].sort(() => 0.5 - Math.random());
-        const picks = shuffled.slice(0, 3).map(p => ({
-          slug: p.slug,
-          title: p.title,
-          channel: p.channelName,
-          time: p.schedule_time,
-          image: p.poster_path ? `https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${p.poster_path}` : `https://picsum.photos/seed/${p.slug}/100/100`
-        }));
-        setTodaysPicks(picks);
       }
 
       // Filter: Strictly programs currently airing (now is between start and end)
@@ -130,7 +131,7 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
                 className="bg-white dark:bg-neutral-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-neutral-800 flex flex-col sm:flex-row gap-4 h-auto sm:h-48 group cursor-pointer hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors"
               >
                 <div className="relative w-full sm:w-32 h-40 sm:h-full rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
-                  <Image src={upNext.image ? (upNext.image.startsWith('http') ? upNext.image : `https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${upNext.image}`) : "https://picsum.photos/seed/drama/200/300"} alt={upNext.title} fill className="object-cover" referrerPolicy="no-referrer" />
+                  <Image src={upNext.image ? (upNext.image.startsWith('http') ? upNext.image : `https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${upNext.image}`) : '/icon.png'} alt={upNext.title} fill className="object-cover" referrerPolicy="no-referrer" />
                 </div>
                 <div className="flex-1 flex flex-col justify-center py-2 relative">
                   <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1 pr-8 group-hover:text-emerald-700 transition-colors">{upNext.title}</h3>
@@ -163,7 +164,7 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
             </div>
             
             <div className="space-y-4 min-h-[160px]">
-              {loadingSchedule ? (
+              {loadingPicks ? (
                 <div className="flex items-center justify-center h-40">
                   <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
                 </div>
@@ -238,7 +239,7 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
                     >
                       <div className="flex justify-between items-start mb-2">
                         <span className={`text-[10px] font-black tracking-widest uppercase ${isNow ? 'text-emerald-600' : 'text-gray-400'}`}>
-                          {program.schedule_time}
+                          {formatInTimeZone(new Date(program.start_time_pkt), "Asia/Karachi", "h:mm a")}
                         </span>
                         {isNow && (
                           <span className="bg-emerald-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded animate-pulse">LIVE</span>

@@ -57,6 +57,8 @@ export default function DramaDetailScreen({ slug, onNavigate, user }: DramaDetai
         setDrama(data);
         // Check if in schedule
         checkSchedule(data.id);
+        // Increment functional views
+        fetch(`/api/drama/${slug}/view`, { method: 'POST' }).catch(() => {});
       })
       .catch((err) => {
         if (cancelled) return;

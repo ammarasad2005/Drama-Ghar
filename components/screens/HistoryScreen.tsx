@@ -63,10 +63,19 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
       if (watchDate >= lastWeek) weekMinutes += mins;
     });
 
+    const formatTime = (totalMins: number) => {
+      const hours = Math.floor(totalMins / 60);
+      const mins = totalMins % 60;
+      if (hours === 0 && mins === 0) return '0 minutes';
+      if (hours === 0) return `${mins} minutes`;
+      if (mins === 0) return `${hours} hours`;
+      return `${hours} hours ${mins} minutes`;
+    };
+
     return {
-      today: (todayMinutes / 60).toFixed(1),
-      week: (weekMinutes / 60).toFixed(1),
-      total: (totalMinutes / 60).toFixed(1)
+      today: formatTime(todayMinutes),
+      week: formatTime(weekMinutes),
+      total: formatTime(totalMinutes)
     };
   };
 
@@ -124,7 +133,7 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
                <TrendingUp size={16} className="text-amber-700 dark:text-amber-400" />
             </div>
           </div>
-          <div className="text-3xl font-black text-amber-900 dark:text-white">{analytics.week} <span className="text-sm font-bold text-amber-700/60 uppercase">Hrs</span></div>
+          <div className="text-xl sm:text-2xl font-black text-amber-900 dark:text-white">{analytics.week}</div>
           <p className="text-[10px] font-bold text-amber-700/60 uppercase mt-1">Weekly Trends</p>
         </div>
 
@@ -165,13 +174,7 @@ export function HistoryScreen({ onNavigate }: HistoryScreenProps) {
               className="group flex items-center gap-4 p-3 rounded-2xl border border-gray-100 dark:border-white/5 bg-white dark:bg-[#111] hover:border-emerald-200 dark:hover:border-emerald-900/30 hover:shadow-lg transition-all cursor-pointer"
             >
               <div className="relative w-24 sm:w-32 aspect-video rounded-xl overflow-hidden bg-gray-100 dark:bg-white/5">
-                {item.image ? (
-                  <img src={item.image.startsWith('http') ? item.image : `https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${item.image}`} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <Play className="w-6 h-6 text-gray-300" />
-                  </div>
-                )}
+                <Image src={item.image ? (item.image.startsWith('http') ? item.image : `https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${item.image}`) : '/icon.png'} alt={item.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg">
                     <Play size={14} fill="currentColor" />

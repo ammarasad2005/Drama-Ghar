@@ -76,7 +76,7 @@ export function RemindersScreen({ onNavigate }: RemindersScreenProps) {
             {reminders.map((item) => (
               <div key={item._id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-6 p-4 lg:p-6 hover:bg-gray-50 dark:hover:bg-neutral-800/50 transition-colors group relative">
                 <div className="relative w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100 dark:border-neutral-800 shadow-sm">
-                  <Image src={item.image || 'https://picsum.photos/seed/drama/200/200'} alt={item.title} fill className="object-cover" />
+                  <Image src={item.image || '/icon.png'} alt={item.title} fill className="object-cover" />
                 </div>
                 <div className="flex-1 w-full">
                   <div className="flex items-center gap-2 mb-1">

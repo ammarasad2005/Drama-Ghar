@@ -15,6 +15,40 @@ export async function GET() {
     }
 
     const items = await Reminder.find({ userId: session.userId }).sort({ createdAt: -1 });
+
+    if (items.length > 0) {
+      const slugs = Array.from(new Set(items.map(i => i.slug)));
+      const supabaseUrl = "https://grrffdnkupjmsgfdnzfd.supabase.co";
+      const supabaseKey = "sb_publishable_HrDqnn2HRf38IZtvYF5V8g_b7C_4FOf";
+      
+      try {
+        const res = await fetch(`${supabaseUrl}/rest/v1/programs?select=slug,poster_path&slug=in.(${slugs.join(',')})`, {
+          headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` }
+        });
+        
+        if (res.ok) {
+          const programs = await res.json();
+          const imageMap = new Map(programs.map((p: any) => [p.slug, p.poster_path]));
+          
+          const updatedItems = items.map(item => {
+            const realImage = imageMap.get(item.slug);
+            let finalImage: any = realImage || item.image;
+            if (typeof finalImage === 'string' && finalImage.includes('picsum.photos')) {
+              finalImage = null; // Clean stale placeholders
+            }
+            return {
+              ...item.toObject(),
+              image: finalImage
+            };
+          });
+          
+          return NextResponse.json({ items: updatedItems });
+        }
+      } catch (err) {
+        console.error("Failed to fetch fresh images from Supabase", err);
+      }
+    }
+
     return NextResponse.json({ items });
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

@@ -154,7 +154,7 @@ export function WatchlistScreen({ onNavigate }: WatchlistScreenProps) {
                         <div key={`${program.id}-${idx}`} className="group relative bg-white dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 rounded-lg p-3 hover:border-emerald-500 dark:hover:border-emerald-600 transition-colors shadow-sm">
                           <div className="flex justify-between items-start mb-2">
                             <span className="text-[10px] font-black tracking-widest uppercase text-emerald-600 dark:text-emerald-500">
-                              {program.schedule_time}
+                              {formatInTimeZone(new Date(program.start_time_pkt), "Asia/Karachi", "h:mm a")}
                             </span>
                             <span className="text-[10px] font-medium text-gray-500 flex items-center gap-1 bg-gray-50 dark:bg-neutral-800 px-1.5 py-0.5 rounded">
                               {durationMins}m

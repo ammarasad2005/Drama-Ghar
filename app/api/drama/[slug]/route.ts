@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import dbConnect from "@/lib/mongodb";
+import { DramaView } from "@/models/DramaView";
 
 const SUPABASE_URL = "https://grrffdnkupjmsgfdnzfd.supabase.co";
 const SUPABASE_KEY = "sb_publishable_HrDqnn2HRf38IZtvYF5V8g_b7C_4FOf";
@@ -51,6 +53,16 @@ export async function GET(
     }
 
     const drama = dramas[0];
+
+    try {
+      await dbConnect();
+      const localView = await DramaView.findOne({ slug });
+      if (localView) {
+        drama.views = (drama.views || 0) + localView.views;
+      }
+    } catch (err) {
+      console.error("[Drama API] Local view fetch error:", err);
+    }
 
     const episodeParams = new URLSearchParams();
     episodeParams.set("select", "id,program_id,episode_number,title,youtube_id,video_url,air_date,created_at");

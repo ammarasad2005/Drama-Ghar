@@ -69,7 +69,7 @@ export function ContinueWatchingScreen({ onNavigate }: ContinueWatchingScreenPro
               className="bg-white dark:bg-neutral-900 rounded-2xl border border-gray-200 dark:border-neutral-800 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row h-auto sm:h-44 group cursor-pointer hover:border-emerald-200 dark:hover:border-emerald-800"
             >
               <div className="w-full sm:w-44 h-40 sm:h-auto relative flex-shrink-0 bg-gray-100 dark:bg-neutral-800">
-                <Image src={item.image ? (item.image.startsWith('http') ? item.image : `https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${item.image}`) : 'https://picsum.photos/seed/drama/400/250'} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
+                <Image src={item.image ? (item.image.startsWith('http') ? item.image : `https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${item.image}`) : '/icon.png'} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-xl">
                     <Play className="w-6 h-6 fill-current" />
