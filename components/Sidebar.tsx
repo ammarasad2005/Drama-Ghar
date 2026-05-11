@@ -1,9 +1,9 @@
 import React from 'react';
-import { Home, Calendar, MonitorPlay, Bookmark, PlayCircle, Bell, Clock, Settings, UserCog, LogOut, X } from 'lucide-react';
+import { Home, Calendar, MonitorPlay, Bookmark, PlayCircle, Bell, Clock, Settings, UserCog, LogOut, X, Search } from 'lucide-react';
 
 interface SidebarProps {
   currentTab: string;
-  onTabChange: (tab: string) => void;
+  onTabChange: (tab: string, params?: any) => void;
   user: any;
   onLogout: () => void;
   isOpen?: boolean;
@@ -14,6 +14,7 @@ export function Sidebar({ currentTab, onTabChange, user, onLogout, isOpen, onClo
   const mainNav = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'schedule', label: 'Schedule', icon: Calendar },
+    { id: 'explore', label: 'Explore Library', icon: Search },
     { id: 'channels', label: 'Channels', icon: MonitorPlay },
     { id: 'watchlist', label: 'My Watchlist', icon: Bookmark },
   ];

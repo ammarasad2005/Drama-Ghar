@@ -35,6 +35,10 @@ const HistorySchema: Schema = new Schema({
   image: {
     type: String,
   },
+  watchDurationMinutes: {
+    type: Number,
+    default: 0,
+  },
   lastWatched: {
     type: Date,
     default: Date.now,

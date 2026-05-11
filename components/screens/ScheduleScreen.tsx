@@ -4,7 +4,7 @@ import { ChevronDown, Clock } from 'lucide-react';
 import { EpgSchedule } from '@/components/epg/epg-schedule';
 
 interface ScheduleScreenProps {
-  onNavigate: (tab: string) => void;
+  onNavigate: (screen: string, params?: any) => void;
   initialChannel?: string;
 }
 
@@ -49,7 +49,7 @@ export function ScheduleScreen({ onNavigate, initialChannel = 'All Channels' }: 
       </div>
 
       {/* The Perfect EPG Component */}
-      <EpgSchedule selectedChannelFilter={selectedChannel} />
+      <EpgSchedule selectedChannelFilter={selectedChannel} onNavigate={onNavigate} />
       
       <div className="mt-6 flex items-center gap-2 text-xs text-gray-400">
         <Clock className="w-4 h-4" />

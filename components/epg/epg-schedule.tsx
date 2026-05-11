@@ -53,10 +53,10 @@ function useUserTimezone() {
 
 interface EpgScheduleProps {
   selectedChannelFilter?: string;
+  onNavigate: (screen: string, params?: any) => void;
 }
 
-export function EpgSchedule({ selectedChannelFilter = 'All Channels' }: EpgScheduleProps) {
-  const router = useRouter();
+export function EpgSchedule({ selectedChannelFilter = 'All Channels', onNavigate }: EpgScheduleProps) {
   const timelineRef = useRef<TimelineHandle>(null);
 
   // Selected date in PKT
@@ -116,29 +116,6 @@ export function EpgSchedule({ selectedChannelFilter = 'All Channels' }: EpgSched
     });
   }, [currentDateKey, scheduleCache]);
 
-  const handleProgramClick = useCallback(
-    async (program: EpgProgram) => {
-      if (program.slug) {
-        try {
-          const res = await fetch('/api/watchlist', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slug: program.slug, title: program.title }),
-          });
-          const data = await res.json();
-          if (res.ok) {
-            alert(`Added ${program.title} to your Watchlist!`);
-          } else {
-            alert(data.error || 'Failed to add to watchlist');
-          }
-        } catch (err) {
-          alert('Error adding to watchlist');
-        }
-      }
-    },
-    []
-  );
-
   const handleJumpToPrime = useCallback(() => {
     timelineRef.current?.scrollToTime(19); // 7 PM
   }, []);
@@ -169,7 +146,7 @@ export function EpgSchedule({ selectedChannelFilter = 'All Channels' }: EpgSched
           ref={timelineRef}
           data={currentData}
           currentDate={selectedDate}
-          onProgramClick={handleProgramClick}
+          onNavigate={onNavigate}
           selectedChannelFilter={selectedChannelFilter}
           className={cn(
             "transition-opacity duration-500",

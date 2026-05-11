@@ -7,14 +7,14 @@ import { formatInTimeZone } from "@/lib/date-utils";
 interface ProgramBlockProps {
   program: EpgProgram;
   style: React.CSSProperties;
-  onClick?: (program: EpgProgram) => void;
+  onNavigate: (screen: string, params?: any) => void;
   timeZone: string;
 }
 
 export function ProgramBlock({
   program,
   style,
-  onClick,
+  onNavigate,
   timeZone,
 }: ProgramBlockProps) {
   const widthPx =
@@ -26,8 +26,13 @@ export function ProgramBlock({
   const formattedTime = formatInTimeZone(startTime, timeZone, "h:mm a");
   const hour = parseInt(formatInTimeZone(startTime, timeZone, "H"));
 
-  const isClickable =
-    program.format !== "Transmission" && program.format !== "Game Show";
+  const isClickable = !!program.slug;
+
+  const handleClick = () => {
+    if (isClickable) {
+      onNavigate('drama', { slug: program.slug });
+    }
+  };
 
   // Determine color scheme based on program type
   let colorClasses: string;
@@ -44,7 +49,7 @@ export function ProgramBlock({
 
   return (
     <div
-      onClick={isClickable ? () => onClick?.(program) : undefined}
+      onClick={handleClick}
       style={style}
       className={`
         absolute top-1.5 bottom-1.5 flex flex-col overflow-hidden
