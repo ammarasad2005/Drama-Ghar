@@ -18,7 +18,7 @@ interface ScheduleDay {
 }
 
 interface WatchlistScreenProps {
-  onNavigate: (tab: string) => void;
+  onNavigate: (screen: string, params?: any) => void;
 }
 
 export function WatchlistScreen({ onNavigate }: WatchlistScreenProps) {
@@ -92,25 +92,8 @@ export function WatchlistScreen({ onNavigate }: WatchlistScreenProps) {
     }
   };
 
-  const watchDrama = async (program: any) => {
-    try {
-      const res = await fetch('/api/history', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          slug: program.slug,
-          title: program.title,
-          episode: 'Episode 1',
-          progress: 5, 
-          image: `https://picsum.photos/seed/${program.slug}/400/225`
-        })
-      });
-      if (res.ok) {
-        onNavigate('continue');
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const watchDrama = (program: any) => {
+    onNavigate('drama', { slug: program.slug });
   };
 
   if (isLoading) {

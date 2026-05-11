@@ -7,7 +7,7 @@ import { formatDateKey, formatInTimeZone } from '@/lib/date-utils';
 
 interface HomeScreenProps {
   user: any;
-  onNavigate: (tab: string) => void;
+  onNavigate: (screen: string, params?: any) => void;
   onChannelClick: (channel: string) => void;
 }
 
@@ -32,8 +32,7 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
       const res = await fetch('/api/history');
       const data = await res.json();
       if (res.ok && data.items && data.items.length > 0) {
-        const incomplete = data.items.find((item: HistoryItem) => item.progress < 100);
-        setUpNext(incomplete || data.items[0]);
+        setUpNext(data.items[0]);
       }
     } catch (err) {
       console.error(err);
@@ -63,13 +62,14 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
 
       // Today's Picks: Pick 3 random programs
       if (allPrograms.length > 0) {
-        const shuffled = [...allPrograms].sort(() => 0.5 - Math.random());
+        const filteredForPicks = allPrograms.filter(p => p.slug);
+        const shuffled = [...filteredForPicks].sort(() => 0.5 - Math.random());
         const picks = shuffled.slice(0, 3).map(p => ({
           slug: p.slug,
           title: p.title,
           channel: p.channelName,
           time: p.schedule_time,
-          image: `https://picsum.photos/seed/${p.slug}/100/100`
+          image: p.poster_path ? `https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${p.poster_path}` : `https://picsum.photos/seed/${p.slug}/100/100`
         }));
         setTodaysPicks(picks);
       }
@@ -98,31 +98,14 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
     fetchCurrentSchedule();
   }, []);
 
-  const watchDrama = async (program: any) => {
-    try {
-      const res = await fetch('/api/history', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          slug: program.slug,
-          title: program.title,
-          episode: 'Episode 1',
-          progress: 10, 
-          image: `https://picsum.photos/seed/${program.slug}/400/225`
-        })
-      });
-      if (res.ok) {
-        onNavigate('continue');
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const watchDrama = (program: any) => {
+    onNavigate('drama', { slug: program.slug });
   };
 
   const userName = user?.name || user?.email?.split('@')[0] || 'User';
 
   return (
-    <div className="flex-1 overflow-y-auto pb-12">
+    <div className="flex-1 overflow-y-auto pb-12 animate-in fade-in duration-500">
       {/* Top Banner Section */}
       <div className="relative pt-6 px-4 lg:px-8 pb-12">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FDFBF7] to-[#F3EDE0] dark:from-[#0a1510] dark:to-[#050a08] -z-10" />
@@ -136,38 +119,38 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Up Next For You */}
           <div className="lg:col-span-2 relative z-10">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Up Next For You</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Resume Watching</h2>
             {loadingHistory ? (
               <div className="bg-white dark:bg-neutral-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-neutral-800 flex items-center justify-center h-48">
                 <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
               </div>
             ) : upNext ? (
               <div 
-                onClick={() => onNavigate('continue')}
+                onClick={() => onNavigate('drama', { slug: upNext.slug })}
                 className="bg-white dark:bg-neutral-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-neutral-800 flex flex-col sm:flex-row gap-4 h-auto sm:h-48 group cursor-pointer hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors"
               >
-                <div className="relative w-full sm:w-32 h-40 sm:h-full rounded-xl overflow-hidden flex-shrink-0">
-                  <Image src={upNext.image || "https://picsum.photos/seed/drama/200/300"} alt={upNext.title} fill className="object-cover" referrerPolicy="no-referrer" />
+                <div className="relative w-full sm:w-32 h-40 sm:h-full rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+                  <Image src={upNext.image ? (upNext.image.startsWith('http') ? upNext.image : `https://grrffdnkupjmsgfdnzfd.supabase.co/storage/v1/object/public/media/${upNext.image}`) : "https://picsum.photos/seed/drama/200/300"} alt={upNext.title} fill className="object-cover" referrerPolicy="no-referrer" />
                 </div>
                 <div className="flex-1 flex flex-col justify-center py-2 relative">
-                  <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1 pr-8">{upNext.title}</h3>
-                  <p className="text-sm text-gray-500 dark:text-slate-400 mb-4 sm:mb-6 font-medium">{upNext.episode}</p>
+                  <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1 pr-8 group-hover:text-emerald-700 transition-colors">{upNext.title}</h3>
+                  <p className="text-sm text-gray-500 dark:text-slate-400 mb-4 sm:mb-6 font-medium">Episode {upNext.episode}</p>
                   
-                  <div className="text-xs font-semibold text-gray-700 dark:text-slate-300 mb-2">{upNext.progress}% complete</div>
+                  <div className="text-xs font-semibold text-gray-700 dark:text-slate-300 mb-2">Continue watching...</div>
                   <div className="w-full bg-gray-100 dark:bg-neutral-800 rounded-full h-1.5 mb-6">
-                    <div className="bg-emerald-700 h-1.5 rounded-full transition-all duration-1000" style={{ width: `${upNext.progress}%` }}></div>
+                    <div className="bg-emerald-700 h-1.5 rounded-full transition-all duration-1000" style={{ width: `100%` }}></div>
                   </div>
                   
                   <button className="bg-emerald-700 text-white text-sm font-medium py-2 px-6 rounded-lg w-full sm:w-max hover:bg-emerald-800 transition-colors shadow-sm flex items-center justify-center gap-2">
                     <PlayCircle className="w-4 h-4" />
-                    Continue Watching
+                    Watch Now
                   </button>
                 </div>
               </div>
             ) : (
               <div className="bg-white dark:bg-neutral-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-neutral-800 flex flex-col items-center justify-center h-48 text-center">
                 <p className="text-gray-400 dark:text-slate-500 text-sm mb-4">Start watching to see your progress here!</p>
-                <button onClick={() => onNavigate('schedule')} className="text-emerald-700 dark:text-emerald-500 font-bold text-sm hover:underline">Browse Dramas</button>
+                <button onClick={() => onNavigate('explore')} className="text-emerald-700 dark:text-emerald-500 font-bold text-sm hover:underline">Explore Library</button>
               </div>
             )}
           </div>
@@ -189,11 +172,11 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
               ) : (
                 todaysPicks.map((pick, i) => (
                   <div key={i} onClick={() => watchDrama(pick)} className="flex items-center gap-3 cursor-pointer group">
-                    <div className="relative w-12 h-16 rounded-md overflow-hidden flex-shrink-0 border border-gray-100 dark:border-neutral-800">
-                      <Image src={pick.image} alt={pick.title} fill className="object-cover" referrerPolicy="no-referrer" />
+                    <div className="relative w-12 h-16 rounded-md overflow-hidden flex-shrink-0 border border-gray-100 dark:border-neutral-800 bg-gray-100">
+                      <Image src={pick.image} alt={pick.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 dark:text-white text-sm group-hover:text-emerald-700 dark:group-hover:text-emerald-500 transition-colors">{pick.title}</h4>
+                      <h4 className="font-semibold text-gray-900 dark:text-white text-sm group-hover:text-emerald-700 dark:group-hover:text-emerald-500 transition-colors truncate">{pick.title}</h4>
                       <div className="flex items-center text-xs text-gray-500 dark:text-slate-400 mt-1">
                         <span>{pick.channel}</span>
                       </div>
@@ -246,7 +229,7 @@ export function HomeScreen({ user, onNavigate, onChannelClick }: HomeScreenProps
                   return (
                     <div 
                       key={`${program.id}-${idx}`} 
-                      onClick={() => onChannelClick(program.channelName)}
+                      onClick={() => program.slug ? onNavigate('drama', { slug: program.slug }) : onChannelClick(program.channelName)}
                       className={`w-[14rem] lg:w-[15rem] border rounded-xl p-4 transition-all duration-300 cursor-pointer ${
                         isNow 
                           ? 'border-emerald-200 dark:border-emerald-800 bg-emerald-50/30 dark:bg-emerald-950/20 shadow-sm ring-1 ring-emerald-100 dark:ring-emerald-900/50' 

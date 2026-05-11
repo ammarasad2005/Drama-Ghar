@@ -30,6 +30,7 @@ export default function App() {
   const [resetToken, setResetToken] = useState<string | null>(null);
   const [resetEmail, setResetEmail] = useState<string | null>(null);
   const [dramaSlug, setDramaSlug] = useState<string | null>(null);
+  const [exploreParams, setExploreParams] = useState<any>(null);
 
   const navigateToSchedule = (channel: string) => {
     setSelectedChannel(channel);
@@ -123,6 +124,9 @@ export default function App() {
     if (params?.slug) {
       setDramaSlug(params.slug);
     }
+    if (screen === 'explore') {
+      setExploreParams(params);
+    }
     setCurrentScreen(screen);
     setIsSidebarOpen(false);
   };
@@ -136,7 +140,7 @@ export default function App() {
       case 'watchlist':
         return <WatchlistScreen onNavigate={handleNavigate} />;
       case 'explore':
-        return <ExploreScreen onNavigate={handleNavigate} />;
+        return <ExploreScreen onNavigate={handleNavigate} initialParams={exploreParams} />;
       case 'drama':
         return <DramaDetailScreen slug={dramaSlug || ''} onNavigate={handleNavigate} user={user} />;
       case 'channels':
